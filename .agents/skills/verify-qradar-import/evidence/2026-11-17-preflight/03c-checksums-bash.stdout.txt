@@ -1,0 +1,5 @@
+full_rules85.yaml: OK
+shared_bbs.yaml: OK
+fields.yaml: OK
+qradar_rules_bb_sysmon.csv: OK
+field_intelligence_concept_v4.html: OK

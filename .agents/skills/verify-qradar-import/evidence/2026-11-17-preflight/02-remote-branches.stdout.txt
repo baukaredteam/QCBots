@@ -1,0 +1,7 @@
+156d7bb172a82fe130dc7cfa6bd099ef63eeaa3d	refs/heads/chore/local-verification
+9d775c5349bdd7b6aa0f0dca2ad48f8cc702e123	refs/heads/docs/field-intelligence-design
+8d3a8d9325d7788aac2c5b1758d48712dcc26d8b	refs/heads/docs/minimal-team
+e74e41acccdd6cfef362e1c8b4a5b072dd9abdaf	refs/heads/docs/threadlinqs-ingestion
+c3bc557817a891802de960d54b2c01ac97a43f80	refs/heads/docs/verification-contract
+ce17fa03bc0907a3c5fa5539d4d3ba24e4e2377f	refs/heads/main
+9fd1af63bdf4f47bd22d5162c53462232bd05137	refs/heads/test/browser-smoke-v3

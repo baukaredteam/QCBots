@@ -1,0 +1,8 @@
+# Preflight commands executed 2026-11-17 (Windows host, PowerShell 5.1)
+git -C <repo> rev-parse HEAD
+git -C <repo> ls-remote --heads origin
+cd config/imports/2026-07-11
+sha256sum.exe -c SHA256SUMS.txt                          # 03: exit 1, CRLF in checksum file
+PS: ReadAllLines | tr.exe -d "\r" | sha256sum.exe -c -  # 03b: exit 1, PS re-adds CRLF on pipeline
+bash -c "tr -d '\r' < SHA256SUMS.txt | sha256sum -c -"# 03c: corrected
+go version; go env GOOS GOARCH CGO_ENABLED CC
