@@ -11,11 +11,11 @@ Chief (оркестратор, общая точка контакта) и чет
 | QA / Verification | Все тесты: unit, integration, security, property-based, statechart/TLA+; артефакты верификации |
 | CTI Engineer | Adversary Brain, Admiralty, ATT&CK, ACH, QRadar coverage, черновики AQL/Sigma, FP-оценка, безопасность |
 
-Упразднены: PM, Tech Lead, отдельные CTI Domain Architect и Detection Engineer, а также не使用的 роли из `.agents/agents` (ai-integration, code-reviewer, documentation). Их обязанности распределены между Chief и four ролями выше: доступ к Linear и планирование ведёт Chief, спеки и ревью — Chief с QA, домен и детекты — CTI Engineer.
+Упразднены: PM, Tech Lead, отдельные CTI Domain Architect и Detection Engineer, а также неиспользуемые роли из `.agents/agents` (ai-integration, code-reviewer, documentation). Их обязанности распределены между Chief и четырьмя ролями выше: доступ к Linear и планирование ведёт Chief, спеки и ревью — Chief вместе с QA, домен и детекты — CTI Engineer.
 
 ## Принцип
 
-Больше агентов не равно больше результата. Каждую коррекцию агента кодируем в детерминированную проверку: линтер, тип или тест. Challenges в тексте soul — только для суждений. Ревью идёт по артефактам верификации, а не по словам «готово».
+Больше агентов не равно больше результата. Каждую коррекцию агента кодируем в детерминированную проверку: линтер, тип или тест. Инструкции в тексте soul оставляем только для суждений. Ревью идёт по артефактам верификации, а не по словам «готово».
 
 ## Импортированные pstack-скиллы
 
@@ -24,7 +24,7 @@ Chief (оркестратор, общая точка контакта) и чет
 - `principle-test-behavior-not-implementation` — тестировать наблюдаемое поведение.
 - `no-comments` — убирать комментарии-оправдания и кодировать ограничения в структуру.
 - `statechart` — TLA+-проверка и Mermaid-диаграмма состояний как артефакт ревью.
-- `create-verification-skill` — проектный скилл, которыйreally проверяет поведение приложения как пользователь.
+- `create-verification-skill` — проектный скилл, который проверяет поведение приложения так, как его видит пользователь.
 
 Источник: https://github.com/cursor/plugins/tree/main/pstack/skills
 
