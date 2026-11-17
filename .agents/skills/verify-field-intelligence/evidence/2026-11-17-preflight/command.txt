@@ -1,0 +1,13 @@
+# Exact preflight commands executed 2026-11-17 (Windows host, PowerShell driver)
+
+git -C <worktree> rev-parse HEAD
+agent-browser --version
+curl.exe -s -o NUL -w "%{http_code}" --max-time 3 http://127.0.0.1:8080/api/v1/auth/me
+curl.exe -s -o NUL -w "%{http_code}" --max-time 3 http://127.0.0.1:4174/api/v1/auth/me
+curl.exe -s -o NUL -w "%{http_code}" --max-time 3 http://127.0.0.1:4173/api/v1/auth/me
+
+# Static source observations (not browser proof):
+#   frontend/v3/v3.js line 7        - 'fields' route labelled Field Intelligence
+#   frontend/v3/v3.js line 376      - shipped tabs; no Threat Intel Links tab
+#   frontend/v3/v3.js lines 392-421 - honest error/empty .statebox texts
+#   tests/browser/package.json      - npm test -> node --test acceptance.test.mjs
