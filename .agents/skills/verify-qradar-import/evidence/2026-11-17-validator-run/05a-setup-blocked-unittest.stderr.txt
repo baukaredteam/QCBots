@@ -1,0 +1,60 @@
+python.exe : test_consistent_evidence_is_accepted (test_validate_imports.ImportValidationTests.test_consistent_evidence
+_is_accepted) ... ok
+C:\Users\Бауыржан\.openmausbot\task-workspaces\df96abcb-fd75-46c7-8b13-c23b285c35e1\84422101-1fe7-42c1-84ec-30175b2fe4f
+f\run_validator.ps1:10 знак:5
++     & $exe @argList > "$E\$prefix.stdout.txt" 2> "$E\$prefix.stderr.t ...
++     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (test_consistent...ccepted) ... ok:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+test_dependencies_resolve_shared_and_rule_local_ids (test_validate_imports.ImportValidationTests.test_dependencies_reso
+lve_shared_and_rule_local_ids) ... ok
+test_each_metadata_counter_is_enforced (test_validate_imports.ImportValidationTests.test_each_metadata_counter_is_enfor
+ced) ... ok
+test_field_key_includes_log_source_set (test_validate_imports.ImportValidationTests.test_field_key_includes_log_source_
+set) ... ok
+test_invalid_counter_remains_machine_readable (test_validate_imports.ImportValidationTests.test_invalid_counter_remains
+_machine_readable) ... ok
+test_log_source_order_does_not_hide_duplicate (test_validate_imports.ImportValidationTests.test_log_source_order_does_n
+ot_hide_duplicate) ... ok
+test_malformed_yaml_and_duplicate_mapping_keys_reject (test_validate_imports.ImportValidationTests.test_malformed_yaml_
+and_duplicate_mapping_keys_reject) ... ok
+test_output_is_deterministic_and_does_not_modify_inputs (test_validate_imports.ImportValidationTests.test_output_is_det
+erministic_and_does_not_modify_inputs) ... ok
+test_real_staged_sources_and_cli (test_validate_imports.ImportValidationTests.test_real_staged_sources_and_cli) ... ERR
+OR
+test_rejects_staging_outside_imports (test_validate_imports.ImportValidationTests.test_rejects_staging_outside_imports)
+ ... ok
+test_shared_dependency_cannot_use_other_rules_local_id (test_validate_imports.ImportValidationTests.test_shared_depende
+ncy_cannot_use_other_rules_local_id) ... ok
+test_synthetic_html_is_excluded_and_references_rejected (test_validate_imports.ImportValidationTests.test_synthetic_htm
+l_is_excluded_and_references_rejected) ... ok
+test_sysmon_is_conditional_without_telemetry (test_validate_imports.ImportValidationTests.test_sysmon_is_conditional_wi
+thout_telemetry) ... ok
+test_trusted_config_cannot_reference_concepts (test_validate_imports.ImportValidationTests.test_trusted_config_cannot_r
+eference_concepts) ... ok
+test_unknown_custom_field_is_rejected (test_validate_imports.ImportValidationTests.test_unknown_custom_field_is_rejecte
+d) ... ok
+
+======================================================================
+ERROR: test_real_staged_sources_and_cli (test_validate_imports.ImportValidationTests.test_real_staged_sources_and_cli)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\┴рє√Ёцрэ\.openmausbot\task-workspaces\df96abcb-fd75-46c7-8b13-c23b285c35e1\84422101-1fe7-42c1-84ec-301
+75b2fe4ff\verify-qradar-run-wt\tests\test_validate_imports.py", line 144, in test_real_staged_sources_and_cli
+    before = {p: hashlib.sha256(p.read_bytes()).hexdigest() for p in staged.iterdir() if not p.name.startswith("VALIDAT
+ION_REPORT")}
+                                ~~~~~~~~~~~~^^
+  File "C:\Python314\Lib\pathlib\__init__.py", line 777, in read_bytes
+    with self.open(mode='rb', buffering=0) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python314\Lib\pathlib\__init__.py", line 771, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [Errno 13] Permission denied: 'C:\\Users\\┴рє√Ёцрэ\\.openmausbot\\task-workspaces\\df96abcb-fd75-46c7-
+8b13-c23b285c35e1\\84422101-1fe7-42c1-84ec-30175b2fe4ff\\verify-qradar-run-wt\\config\\imports\\2026-07-11\\2026-07-11'
+
+----------------------------------------------------------------------
+Ran 15 tests in 0.679s
+
+FAILED (errors=1)

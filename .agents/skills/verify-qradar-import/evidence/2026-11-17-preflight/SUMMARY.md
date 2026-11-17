@@ -1,4 +1,6 @@
-# Preflight evidence — 2026-11-17
+# Preflight evidence — 2026-11-17 (superseded)
+
+This record is integrity-only and was written before the validator existed. The validator scenarios below are no longer NOT VERIFIED; see `../2026-11-17-validator-run/SUMMARY.md` for the executed run and current verdicts.
 
 Operator: QA / Verification Engineer (MSSP Intelligence Workbench).
 Scope: staged-file integrity and environment discovery only. This is NOT a validator run.

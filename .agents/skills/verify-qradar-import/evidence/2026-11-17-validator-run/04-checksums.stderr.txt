@@ -1,0 +1,8 @@
+bash.exe : sha256sum: WARNING: 1 line is improperly formatted
+C:\Users\Бауыржан\.openmausbot\task-workspaces\df96abcb-fd75-46c7-8b13-c23b285c35e1\84422101-1fe7-42c1-84ec-30175b2fe4f
+f\run_validator.ps1:10 знак:5
++     & $exe @argList > "$E\$prefix.stdout.txt" 2> "$E\$prefix.stderr.t ...
++     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (sha256sum: WARN...perly formatted:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 

@@ -1,26 +1,31 @@
 # Reject staged files with inconsistent metadata
 
+Verdict: REAL PASS on `ccdfab4`. Evidence: `../evidence/2026-11-17-validator-run/08-validator.*` and `08-VALIDATION_REPORT.json`.
+
 ## Sub-features
 
-- `full_rules85.yaml`: header claims 346 rules / ~85 fully configured, only 14 rule records parse (PROVENANCE.md).
-- `shared_bbs.yaml`: metadata claims `total_shared_bbs: 85`, only 67 building blocks parse.
-- `fields.yaml`: metadata claims `total_fields: 42`, 54 records parse and 5 names duplicate; natural key is `(name, log_sources)`, not `name`.
-- `qradar_rules_bb_sysmon.csv`: raw cp1251 export, 1326 rows, 18 columns — unverified, not an authoritative count.
-- `field_intelligence_concept_v4.html`: design reference only, not importable evidence.
+- `full_rules85.yaml`: declared 346 rules / 85 fully configured / 42 with Sysmon / 43 without; parsed 14 rules, 7 with Sysmon, 7 without.
+- `shared_bbs.yaml`: declared `total_shared_bbs: 85`, parsed 67 building blocks.
+- `fields.yaml`: declared `total_fields: 42`, parsed 54 records; duplicates resolve under `(name, log_sources)`, so no `DUPLICATE_FIELD_KEY` was emitted for the real staged files.
+- `qradar_rules_bb_sysmon.csv` and `field_intelligence_concept_v4.html` appear in `excluded_inputs`; neither is used as authoritative evidence.
 
 ## How to get to it (user POV)
 
-A release engineer points the validator at `config/imports/2026-07-11/` and expects it to refuse these files as authoritative, state each reason, and leave trusted inventory untouched.
+A release engineer points the validator at `config/imports/2026-07-11/` and expects it to refuse these files as authoritative, name each reason, and leave trusted inventory untouched.
 
-## Driving it with the validator CLI
+## Driving it with the CLI
 
-BLOCKED at `ce17fa03`: no validator command exists in the repo. Copy the exact invocation from `feat/validate-qradar-import`; do not reconstruct it. The inputs above are real and already staged; the checksum preflight in `SKILL.md` must pass first.
+From the isolated run worktree (see `../SKILL.md#launch`):
 
-Expected observable end state once the command is known: non-zero exit; reasons naming the rule, BB and field count mismatches and the duplicate natural keys; `git status --short` shows no change to `config/rules_inventory.yaml` or `config/custom_fields_qradar.yaml`; stdout, stderr, exit code and report saved under the run id.
+```
+python scripts/validate_imports.py
+```
+
+Recorded observable end state: exit 1; verdict `REJECT`; six `COUNT_MISMATCH` errors with declared and actual values; one `UNRESOLVED_BB` (see the BB-refs feature); seven `CONDITIONAL` Sysmon rules; `excluded_inputs` contains the HTML and CSV. The validator's own `sha256` map includes `rules_inventory.yaml` and `custom_fields_qradar.yaml`, proving they were read but not changed. Unit test `test_real_staged_sources_and_cli` additionally verifies input bytes and trusted config bytes are unchanged.
 
 ## Gotchas
 
-- Header and metadata counts are claims; compare against parsed records, not against the claim.
-- Do not treat `name` alone as the field key; duplicates must be evaluated on `(name, log_sources)`.
-- The HTML concept is not telemetry or AQL verification.
-- The staged directory is untracked and read-only for verification; never edit it to make the scenario pass.
+- Exit 1 is the expected outcome here; do not relabel it FAIL. The scenario fails only if the verdict/reasons are missing or wrong.
+- Header and metadata counts are claims; compare them with parsed records.
+- A nested `2026-07-11/2026-07-11` copy in the staged dir makes the suite fail with `PermissionError` before validation (`05a-setup-blocked-*`); the guard in Launch prevents it.
+- Never edit the staged files to make the scenario pass.

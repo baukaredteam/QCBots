@@ -1,23 +1,30 @@
 # Resolve BB references
 
+Verdict: REAL PASS on `ccdfab4`. Evidence: `../evidence/2026-11-17-validator-run/07-unittest.*`, `08-VALIDATION_REPORT.json`.
+
 ## Sub-features
 
-- `full_rules85.yaml` rule logic references building blocks such as `BB_0000100_common:...` and `INC_0000100_common:...`.
+- Rule logic references building blocks such as `BB_0002100_common:Whoami_Executed_as_System_Windows`.
 - `shared_bbs.yaml` states references resolve by `bb_id` through `depends_on_bb` (metadata `usage`, lines 12–14).
-- Resolution must follow `depends_on_bb` chains; unresolved references are reported with rule id and bb id.
+- Resolution covers shared blocks, rule-local blocks and their `depends_on_bb` chains; unresolved refs are reported with owner and bb id.
 
 ## How to get to it (user POV)
 
-A release engineer wants to know whether the rule logic can actually be resolved against the shared BB library, rather than trusting the header claim "FIXED: All BB references aligned with shared_bbs.yaml".
+A release engineer wants to know whether rule logic can be resolved against the shared BB library rather than trusting the header claim "FIXED: All BB references aligned with shared_bbs.yaml".
 
-## Driving it with the validator CLI
+## Driving it with the CLI
 
-BLOCKED at `ce17fa03`: no validator command exists in the repo. Copy the exact invocation from `feat/validate-qradar-import`; do not reconstruct it. Use the real `full_rules85.yaml` and `shared_bbs.yaml` from `config/imports/2026-07-11/` after the checksum preflight.
+From the isolated run worktree (see `../SKILL.md#launch`):
 
-Expected observable end state once the command is known: every referenced `bb_id` resolves against the 67 shared building blocks, dependency chains are traversed, and any unresolved reference is listed with its rule id and bb id instead of being silently ignored. Save stdout, stderr, exit code and the resolution report under the run id.
+```
+python -m unittest discover -s tests -p test_validate_imports.py -v
+python scripts/validate_imports.py
+```
+
+Recorded observable end state: the suite's `test_dependencies_resolve_shared_and_rule_local_ids` and `test_shared_dependency_cannot_use_other_rules_local_id` pass (exit 0 overall). On the real staged files the CLI reports, as a source-data defect, `UNRESOLVED_BB` with owner `shared_bbs`, `bb_id` `BB_0002100_common:Whoami_Executed_as_System_Windows`, `reference` `BB_eventype:ProcessCreate`. The referenced building block is missing from the 67 shared blocks; the validator correctly refuses the import.
 
 ## Gotchas
 
+- `UNRESOLVED_BB` here is a defect in the staged source data, not a validator bug. The validator's observable behavior is correct and this scenario passes.
 - Resolve on `bb_id`; a matching `bb_name` is not a resolved reference.
-- The "all aligned" header is a claim — only the validator's resolution report is evidence.
-- Do not edit the staged YAML files to make references resolve.
+- Do not edit the staged YAML files to make references resolve. Fixing the source inventory is a separate human-approved change.

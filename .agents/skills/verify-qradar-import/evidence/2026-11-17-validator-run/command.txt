@@ -1,0 +1,12 @@
+# Exact commands executed (2026-11-17), from the isolated worktree at ccdfab4
+
+git rev-parse HEAD
+python --version
+python -c "import yaml; print(yaml.__version__)"
+bash -c "tr -d '\r' < config/imports/2026-07-11/SHA256SUMS.txt | (cd config/imports/2026-07-11 && sha256sum -c -)"
+python -c "from pathlib import Path; p=Path('config/imports/2026-07-11'); assert not any(x.is_dir() for x in p.iterdir()), 'nested staged copy'"
+python -m unittest discover -s tests -p test_validate_imports.py -v
+python scripts/validate_imports.py
+
+# First attempt (05/06, renamed to 05a/06a) had a nested staged copy and was not counted as a pass.
+# PowerShell native redirection produced UTF-16LE; artifacts were normalized to UTF-8 without BOM.
