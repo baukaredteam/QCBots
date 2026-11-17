@@ -8,9 +8,9 @@ disable-model-invocation: true
 
 Surface: the v3 web UI at `/v3/index.html#fields`, served by the Go backend from `frontend/`. Primary harness: the OpenMausBot mounted Browser using the installed agent-browser 0.41.2 snapshot/ref workflow; the repo also ships a Playwright acceptance harness in `tests/browser`.
 
-Baseline revision: `e70de881fe1e143ce115e0e216f632035b094a6c` (PR #1–#8 merged).
+Authored at `e70de881fe1e143ce115e0e216f632035b094a6c` (PR #1–#8 merged). Current code revision for the Threat Intel Links static proof: `e3cacbdaf807936d5e7eac95a1ede8fb7683e9f3` (PR #9 merged).
 
-Status at baseline: all three browser scenarios are NOT VERIFIED. No live authenticated backend session was available during the interview (`curl` probes returned HTTP 000 with curl exits 7 and 52 — see `evidence/2026-11-17-preflight/`). No browser exit codes or page results have been invented. The Threat Intel Links tab exists only in the DESIGN ONLY concept, not in the shipped v3 code.
+All three browser scenarios are NOT VERIFIED. No live authenticated backend session was available during the interview (`curl` probes returned HTTP 000 with curl exits 7 and 52 — see `evidence/2026-11-17-preflight/`). No browser exit codes or page results have been invented. The Threat Intel Links tab was absent at the authored baseline but exists in source at `e3cacbd`; a real `grep` proof is in `evidence/2026-11-17-threat-links-static/`, and the browser scenario is still NOT VERIFIED.
 
 `docs/FIELD_INTELLIGENCE_DESIGN.md` and `config/imports/2026-07-11/field_intelligence_concept_v4.html` are DESIGN ONLY (synthetic). They are design references, not evidence of telemetry, QRadar connectivity, client data, or Threadlinqs calls.
 
@@ -18,7 +18,7 @@ Status at baseline: all three browser scenarios are NOT VERIFIED. No live authen
 
 - Navigation: `frontend/v3/v3.js` line 7 defines the `fields` route with label `Field Intelligence`; `frontend/v3/hunt-workspace.js` line 698 has an `Open Field Intelligence` button that navigates to `fields`.
 - Field view (`frontend/v3/v3.js` lines 328–489): selects with ARIA labels `Client`, `QRadar instance`, `QRadar domain`, `Log source type`, `Log source`, `Event`, plus a `Search` input. The global client context is `#tenant` (ARIA label `Client context`). Client options come from `me.authorized_clients`; the client select placeholder is `Select authorized client…`.
-- Tabs in shipped code: `Event Catalog`, `Field Registry`, `Auto Import`, `Mapping Inspector`, `Hunt Readiness`, plus `Domain Bindings` for `ADMINISTRATOR`. There is no `Threat Intel Links` tab in `frontend/v3` at this revision; it appears only in `docs/FIELD_INTELLIGENCE_DESIGN.md` §9 and the V4 concept HTML.
+- Tabs: `Event Catalog`, `Field Registry`, `Auto Import`, `Mapping Inspector`, `Hunt Readiness`, plus `Domain Bindings` for `ADMINISTRATOR`. `Threat Intel Links` was absent at `e70de881`; at `e3cacbd` (PR #9) `frontend/v3/v3.js` line 376 declares `['threat-links', 'Threat Intel Links']` and line 407 renders the crosswalk (`DESIGN ONLY`, `Threadlinqs live PoC: NOT VERIFIED`). Verified statically with `grep -n "threat-links" frontend/v3/v3.js` (exit 0) — see `evidence/2026-11-17-threat-links-static/`. Static proof is not a browser run.
 - Client-scoped requests: `/api/v1/qradar/field-definitions?client_id=…&domain_id=…`, `/api/v1/qradar/field-mappings?…`, `/api/v1/qradar/field-observations?…`, `/api/v1/qradar/import-batches?client_id=…`, and cascading instance/domain/type/source/QID endpoints.
 - Honest empty/error states live in `.statebox`: `Select an authorized client to load the QRadar hierarchy.`, `No rows for this selection. An absent row means "not recorded", not "does not exist in QRadar".`, and status texts for 403/404/400/503/network failures. Field rows carry `UNVERIFIED` or `AQL VERIFIED (manual)` badges; presence alone never means AQL VERIFIED.
 - No Threadlinqs request exists in `frontend/v3`; the only frontend mention is a prototype (`frontend/prototypes/v2/intelligence-hub.html`) labelled approval pending and unverified. Counts shown by the view are derived from loaded inventory arrays, not from a hardcoded demo metric.
@@ -31,8 +31,10 @@ Status at baseline: all three browser scenarios are NOT VERIFIED. No live authen
 Create an isolated worktree; do not switch the shared checkout's HEAD:
 
 ```
-git worktree add --detach <run-dir> e70de881fe1e143ce115e0e216f632035b094a6c
+git worktree add --detach <run-dir> e3cacbdaf807936d5e7eac95a1ede8fb7683e9f3
 ```
+
+Use the current code revision so the Threat Intel Links tab is present. The preflight environment probes were taken at the authored baseline `e70de881`.
 
 Seed a disposable SQLite database and serve the app from the run worktree:
 
@@ -62,13 +64,13 @@ Doctor fails closed unless the auth probe is 200 and the browser tool is availab
 
 Use the mounted Browser surface for all page actions. Follow the agent-browser core loop: `agent_browser_open` the authorized URL, use the returned refs (or a new `agent_browser_snapshot`), click/select/fill stable handles, snapshot again to observe changed content, save a screenshot, collect whatever console/page errors the surface reports, then `agent_browser_close`. If CLI actions are permitted, pass the worktree-scoped session name on every command; otherwise report that limitation.
 
-Stable handles from this repo: nav link text `Field Intelligence`; `#tenant` (`aria-label="Client context"`); selects with ARIA labels `Client`, `QRadar instance`, `QRadar domain`, `Log source type`, `Log source`, `Event`; tab buttons `Event Catalog`, `Field Registry`, `Auto Import`, `Mapping Inspector`, `Hunt Readiness`, `Domain Bindings` (admin only); `.statebox` for honest error/empty states; `UNVERIFIED` / `AQL VERIFIED (manual)` badges. Do not drive the DESIGN ONLY concept HTML as if it were the app.
+Stable handles from this repo: nav link text `Field Intelligence`; `#tenant` (`aria-label="Client context"`); selects with ARIA labels `Client`, `QRadar instance`, `QRadar domain`, `Log source type`, `Log source`, `Event`; tab buttons `Event Catalog`, `Field Registry`, `Auto Import`, `Mapping Inspector`, `Hunt Readiness`, `Threat Intel Links` (present from `e3cacbd`), `Domain Bindings` (admin only); `.statebox` for honest error/empty states; `UNVERIFIED` / `AQL VERIFIED (manual)` badges. Do not drive the DESIGN ONLY concept HTML as if it were the app.
 
 Capture, per action: the ref and action, resulting visible text, any request/response observation, screenshot, and console/page errors reported by the surface. Browser actions return structured results, not shell exit codes: record exit as N/A, never 0.
 
 ## Evidence
 
-For each real run create `.agents/skills/verify-field-intelligence/evidence/<utc-run-id>/` with `command.txt`, `actions.md` (action/ref/observed state), screenshot PNG, reported console/page errors, probes and any process exit codes. Use REAL PASS / FAIL / NOT VERIFIED from docs/VERIFICATION_CONTRACT.md. A blocked environment is NOT VERIFIED; a broken assertion in a correctly provisioned environment is FAIL. `evidence/2026-11-17-preflight/` holds the real preflight commands and exit codes collected here; it establishes only that no live backend was available, not any product behavior.
+For each real run create `.agents/skills/verify-field-intelligence/evidence/<utc-run-id>/` with `command.txt`, `actions.md` (action/ref/observed state), screenshot PNG, reported console/page errors, probes and any process exit codes. Use REAL PASS / FAIL / NOT VERIFIED from docs/VERIFICATION_CONTRACT.md. A blocked environment is NOT VERIFIED; a broken assertion in a correctly provisioned environment is FAIL. `evidence/2026-11-17-preflight/` holds the real preflight commands and exit codes collected here; it establishes only that no live backend was available, not any product behavior. `evidence/2026-11-17-threat-links-static/` holds the real `grep -n "threat-links" frontend/v3/v3.js` proof (exit 0) at `e3cacbd`; it proves source presence only, not a rendered browser scenario.
 
 ## Cleanup
 

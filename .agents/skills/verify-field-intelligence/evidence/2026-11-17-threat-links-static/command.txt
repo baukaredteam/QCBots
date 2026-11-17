@@ -1,0 +1,8 @@
+# Exact static commands executed 2026-11-17 from the worktree at e3cacbdaf807936d5e7eac95a1ede8fb7683e9f3
+
+git rev-parse HEAD
+grep -n "threat-links" frontend/v3/v3.js
+grep -n "Threat Intel Links" frontend/v3/v3.js
+
+# Raw stdout/stderr bytes were captured without shell re-encoding.
+# These commands prove the code exists; they do NOT prove a rendered browser scenario.
