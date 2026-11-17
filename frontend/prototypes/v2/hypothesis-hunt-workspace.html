@@ -1,0 +1,25 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Hypothesis / Hunt Workspace — v2 prototype</title><link rel="stylesheet" href="v2.css"></head><body>
+<div class="shell"><aside class="sb"><div class="sb-brand"><div class="logo">SA</div><div><div class="sb-title">Sentinel Atlas</div></div></div><nav class="sb-nav"><a href="research-case-workspace.html">← Case</a><div class="sb-group">Hypothesis Lab</div><a class="active">Hunt Workspace <span class="tag">Design-only</span></a></nav><div class="sb-foot"><div class="text-sm text-muted">No SIEM execution simulated.</div></div></aside>
+<main class="main"><header class="top"><div class="crumb">Threat Hunting / <strong>hyp-1122</strong></div><div class="top-right"><span class="chip">No execution engine</span></div></header>
+<div style="margin-top:1rem">
+<div class="card"><div class="card-h">Hypothesis Statement <span class="badge b-review">DESIGN-ONLY</span></div><div class="card-b">
+<p><strong>APT29 is targeting energy SCADA via encoded PowerShell execution.</strong></p>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-top:1rem">
+<div class="kv"><span class="kv-k">Related TTPs</span><span class="kv-v">T1059.001, T1021, T1003</span></div>
+<div class="kv"><span class="kv-k">Target Client</span><span class="kv-v">client-alpha (ENERGY)</span></div>
+<div class="kv"><span class="kv-k">Required Telemetry</span><span class="kv-v">Sysmon, PowerShell logs (coverage API partial)</span></div>
+<div class="kv"><span class="kv-k">Detection Coverage</span><span class="kv-v">PARTIAL — via QRadar Rules (EXISTING partial)</span></div>
+</div></div></div>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1rem">
+<div class="card"><div class="card-h">Confidence vs Judgment</div><div class="card-b">
+<p class="text-sm">Confidence: MEDIUM (prototype — no scoring engine)</p>
+<p class="text-sm">Human Review: <span class="badge b-open">APPROVED (alpha)</span> <span class="badge b-review">PENDING (beta)</span> — append-only per client (EXISTING).</p>
+<p class="text-sm">Hunt Outcome: TP/FP/INCONCLUSIVE is stored in <code>investigations.final_verdict</code> separately from review decisions (EXISTING).</p>
+</div></div>
+<div class="card"><div class="card-h">Proposed QRadar AQL</div><div class="card-b"><p class="text-muted">AQL drafting is HUMAN-REVIEW-ONLY and not auto-deployed. Read-only QRadar integration — PLANNED.</p><code>SELECT * FROM events WHERE eventName CONTAINS 'powershell' AND severity &gt;= 5</code></div></div>
+<div class="card"><div class="card-h">Execution Evidence</div><div class="card-b"><p class="text-muted">No real hunt execution exists. Any evidence shown here is synthetic and must not be presented as detection.</p></div></div>
+<div class="card"><div class="card-h">Analyst Findings</div><div class="card-b"><p class="text-muted">Findings flow: investigation → evidence → review → next hypothesis. Requires M7+ for full loop.</p><button class="btn btn-primary" disabled>Create Investigation (via API)</button></div></div>
+</div></div></main>
+<aside class="inspector"><div class="ins-h">Inspector</div><div class="ins-b"><p class="text-muted text-sm">Context: related entities, provenance, telemetry gaps. Hunt outcome is never inferred from review decision.</p></div></aside>
+</div></body></html>

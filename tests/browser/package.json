@@ -1,0 +1,12 @@
+{
+  "name": "sentinel-atlas-browser-acceptance",
+  "private": true,
+  "type": "module",
+  "description": "Reproducible Hunt Workspace browser acceptance (isolated Go server + disposable SQLite).",
+  "scripts": {
+    "test": "node --test --test-concurrency=1 acceptance.test.mjs"
+  },
+  "dependencies": {
+    "playwright-core": "^1.65.0"
+  }
+}

@@ -1,0 +1,36 @@
+# Build outputs and compiled binaries
+*.exe
+*.dll
+*.pdb
+*.test
+*.out
+*.a
+*.o
+
+# Local runtime state and databases (never commit telemetry or working DBs)
+storage/
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+*.log
+
+# Generated indexes and dependency caches
+.codegraph/
+node_modules/
+__pycache__/
+*.pyc
+.pytest_cache/
+.mypy_cache/
+.cache/
+dist/
+build/
+
+# Local editor / harness state
+.openchamber/
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db

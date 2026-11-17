@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sentinel Atlas — Analyst Overview</title>
+    <style>
+        /* ============================================================
+           DESIGN SYSTEM v1.1 — Dark Professional
+           ============================================================ */
+        :root {
+            --bg: #0f172a;
+            --bg-body: #0b1120;
+            --card: #1e293b;
+            --card-hover: #273549;
+            --card-border: #334155;
+            --card-border-hover: #475569;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --text-dim: #64748b;
+            --accent: #3b82f6;
+            --accent-hover: #2563eb;
+            --accent-bg: #1e3a8a;
+            --success: #22c55e;
+            --success-bg: #064e3b;
+            --warning: #f59e0b;
+            --warning-bg: #451a03;
+            --danger: #ef4444;
+            --danger-bg: #450a0a;
+            --info: #38bdf8;
+            --info-bg: #0c4a6e;
+            --border: #334155;
+            --radius: 0.5rem;
+            --radius-sm: 0.375rem;
+            --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.3), 0 1px 2px -1px rgba(0, 0, 0, 0.3);
+            --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { font-size: 14px; }
+        body {
+            font-family: var(--font-family);
+            background: var(--bg-body);
+            color: var(--text-primary);
+            height: 100vh;
+            overflow: hidden;
+            line-height: 1.5;
+        }
+
+        /* ============================================================
+           Application Shell
+           ============================================================ */
+        .app-shell {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            grid-template-rows: 64px 1fr;
+            grid-template-areas:
+                "topbar topbar"
+                "sidebar main";
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .topbar {
+            grid-area: topbar;
+            background: var(--card);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 1.25rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 700;
+            font-size: 1.125rem;
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            color: white;
+        }
+
+        .search-bar {
+            position: relative;
+            flex: 1;
+            max-width: 320px;
+        }
+
+        .search-bar input {
+            width: 100%;
+            background: #0b1120;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 0.5rem 0.75rem 0.5rem 2.5rem;
+            color: var(--text-primary);
+            font-size: 0.875rem;
+        }
+
+        .search-bar input:focus {
+            border-color: var(--accent);
+            outline: none;
+        }
+
+        .search-bar::before {
+            content: '🔍';
+            position: absolute;
+            left: 0.625rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.375rem 0.75rem;
+            background: #0b1120;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            cursor: pointer;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        .user-menu:hover {
+            background: #1e293b;
+            border-color: var(--card-border-hover);
+        }
+
+        .user-avatar {
+            width: 28px;
+            height: 28px;
+            background: var(--accent-bg);
+            border: 1px solid var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .sidebar {
+            grid-area: sidebar;
+            background: var(--card);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .sidebar-brand {
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .sidebar-nav {
+            padding: 0.75rem 0;
+            overflow-y: auto;
+        }
+
+        .nav-group-title {
+            font-size: 0.6875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-dim);
+            padding: 0.75rem 1.25rem 0.375rem;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 0.625rem;
+            padding: 0.5625rem 1.25rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-radius: 0 0 0 0;
+            border-left: 3px solid transparent;
+            transition: all 0.15s ease;
+        }
+
+        .nav-item:hover {
+            background: var(--card-hover);
+            color: var(--text-primary);
+        }
+
+        .nav-item.active {
+            background: var(--accent-bg);
+            color: var(--accent);
+            border-left-color: var(--accent);
+        }
+
+        .nav-item .nav-icon {
+            width: 16px;
+            text-align: center;
+            font-size: 0.875rem;
+        }
+
+        .main {
+            grid-area: main;
+            background: var(--bg-body);
+            overflow-y: auto;
+            padding: 1.5rem;
+        }
+
+        /* ============================================================
+           Page Header
+           ============================================================ */
+        .page-header {
+            margin-bottom: 1.5rem;
+        }
+
+        .page-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .page-subtitle {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        .page-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        /* ============================================================
+           Buttons
+           ============================================================ */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-sm);
+            border: 1px solid transparent;
+            font-family: var(--font-family);
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+
+        .btn-primary:hover { background: var(--accent-hover); }
+
+        .btn-secondary {
+            background: #0b1120;
+            color: var(--text-secondary);
+            border-color: var(--border);
+        }
+
+        .btn-secondary:hover { background: #1e293b; color: var(--text-primary); border-color: var(--card-border-hover); }
+
+        .btn-sm { padding: 0.375rem 0.75rem; font-size: 0.75rem; }
+
+        .btn-icon {
+            padding: 0.5rem;
+            background: #0b1120;
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            border-radius: var(--radius-sm);
+        }
+
+        .btn-icon:hover { background: #1e293b; color: var(--text-primary); border-color: var(--card-border-hover); }
+
+        .btn-danger { background: var(--danger-bg); color: var(--danger); border-color: var(--danger); }
+        .btn-danger:hover { background: var(--danger); color: white; }
+
+        /* ============================================================
+           Cards & Grid
+           ============================================================ */
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
+        }
+
+        .card-body { padding: 1.25rem; }
+
+        .card-footer {
+            padding: 0.75rem 1.25rem;
+            border-top: 1px solid var(--border);
+            background: #0b1120;
+        }
+
+        .grid-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.25rem;
+        }
+
+        .stat-value {
+            font-size: 1.875rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
+        }
+
+        .stat-trend {
+            font-size: 0.75rem;
+            font-weight: 500;
+            margin-top: 0.25rem;
+        }
+
+        .trend-up { color: var(--success); }
+        .trend-down { color: var(--danger); }
+        .trend-neutral { color: var(--text-muted); }
+
+        /* ============================================================
+           Tables
+           ============================================================ */
+        .table-wrap {
+            overflow-x: auto;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--card);
+        }
+
+        th {
+            text-align: left;
+            font-size: 0.6875rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
+            padding: 0.625rem 1rem;
+            border-bottom: 1px solid var(--border);
+            background: #0b1120;
+        }
+
+        td {
+            padding: 0.75rem 1rem;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--border);
+        }
+
+        tr:hover { background: var(--card-hover); }
+        tr:last-child td { border-bottom: none; }
+
+        /* ============================================================
+           Badges & Chips
+           ============================================================ */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            padding: 0.1875rem 0.5rem;
+            border-radius: 999px;
+            font-size: 0.6875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .badge-open { background: var(--success-bg); color: var(--success); border: 1px solid var(--success); }
+        .badge-inprogress { background: var(--info-bg); color: var(--info); border: 1px solid var(--info); }
+        .badge-review { background: var(--warning-bg); color: var(--warning); border: 1px solid var(--warning); }
+        .badge-closed { background: #1e293b; color: var(--text-muted); border: 1px solid var(--border); }
+        .badge-archived { background: #0f172a; color: var(--text-dim); border: 1px solid var(--border); }
+
+        .badge-approved { background: var(--success-bg); color: var(--success); }
+        .badge-rejected { background: var(--danger-bg); color: var(--danger); }
+        .badge-needs-data { background: var(--warning-bg); color: var(--warning); }
+
+        .badge-view { background: #1e3a8a; color: #93c5fd; border: 1px solid #3b82f6; }
+        .badge-create { background: #064e3b; color: #6ee7b7; border: 1px solid #22c55e; }
+        .badge-edit { background: #451a03; color: #fdba74; border: 1px solid #f59e0b; }
+        .badge-review-perm { background: #450a0a; color: #fca5a5; border: 1px solid #ef4444; }
+
+        .client-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            padding: 0.1875rem 0.5rem;
+            border-radius: 999px;
+            font-size: 0.6875rem;
+            font-weight: 600;
+            background: #0b1120;
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+
+        .client-chip.alpha { border-color: #3b82f6; color: #93c5fd; }
+        .client-chip.beta { border-color: #a855f7; color: #d8b4fe; }
+
+        /* ============================================================
+           Permission Row
+           ============================================================ */
+        .perm-row {
+            display: flex;
+            gap: 0.25rem;
+            gap: 0.25rem;
+        }
+
+        /* ============================================================
+           Empty / Loading / Error / Access Denied States
+           ============================================================ */
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem 1rem;
+            color: var(--text-muted);
+            text-align: center;
+        }
+
+        .empty-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .empty-title { font-size: 1.125rem; font-weight: 600; color: var(--text-primary); margin-bottom: 0.25rem; }
+        .empty-subtitle { font-size: 0.875rem; color: var(--text-muted); max-width: 320px; }
+
+        .loading-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem 1rem;
+            color: var(--text-muted);
+        }
+
+        .spinner {
+            width: 32px;
+            height: 32px;
+            border: 3px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-bottom: 1rem;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .error-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem 1rem;
+            text-align: center;
+        }
+
+        .error-title { color: var(--danger); font-weight: 600; margin-bottom: 0.5rem; }
+        .error-msg { color: var(--text-muted); margin-bottom: 1rem; max-width: 320px; }
+
+        .access-denied-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem 1rem;
+            text-align: center;
+            border: 1px solid var(--warning);
+            border-radius: var(--radius);
+            background: var(--warning-bg);
+        }
+
+        .access-icon { font-size: 3rem; margin-bottom: 1rem; opacity: 0.7; }
+        .access-title { color: var(--warning); font-weight: 600; margin-bottom: 0.25rem; }
+        .access-subtitle { color: var(--text-muted); max-width: 320px; }
+
+        /* ============================================================
+           Utility
+           ============================================================ */
+        .text-muted { color: var(--text-muted); }
+        .text-sm { font-size: 0.75rem; }
+        .font-medium { font-weight: 500; }
+        .font-semibold { font-weight: 600; }
+        .mt-1 { margin-top: 0.25rem; }
+        .mt-2 { margin-top: 0.5rem; }
+        .mt-3 { margin-top: 0.75rem; }
+        .mb-1 { margin-bottom: 0.25rem; }
+        .mb-2 { margin-bottom: 0.5rem; }
+        .mb-3 { margin-bottom: 0.75rem; }
+        .mb-4 { margin-bottom: 1rem; }
+        .flex { display: flex; }
+        .flex-col { flex-direction: column; }
+        .items-center { align-items: center; }
+        .justify-between { justify-content: space-between; }
+        .gap-1 { gap: 0.25rem; }
+        .gap-2 { gap: 0.5rem; }
+        .gap-3 { gap: 0.75rem; }
+        .w-full { width: 100%; }
+        .block { display: block; }
+        .hidden { display: none; }
+        .code { font-family: ui-monospace, SFMono-Regular, 'Source Code Pro', monospace; font-size: 0.75rem; background: #0b1120; padding: 0.125rem 0.25rem; border-radius: var(--radius-sm); color: #a5f3fc; }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #0b1120;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 0.5rem;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+            border-radius: 3px;
+        }
+
+        .fade-in { animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+        .notification {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--accent);
+            padding: 0.75rem 1rem;
+            border-radius: var(--radius);
+            color: var(--text-primary);
+            font-size: 0.875rem;
+            z-index: 1000;
+            box-shadow: var(--shadow);
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(4px);
+        }
+        .modal-overlay.open { display: flex; }
+        .modal {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            max-width: 640px;
+            width: 90%;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow);
+        }
+        .modal-header {
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .modal-title { font-size: 1rem; font-weight: 600; color: var(--text-primary); }
+        .modal-close {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.25rem;
+            cursor: pointer;
+        }
+        .modal-close:hover { color: var(--text-primary); }
+        .modal-body { padding: 1.25rem; }
+    </style>
+</head>
+<body>
+
+    <div class="app-shell">
+        <!-- Topbar -->
+        <header class="topbar">
+            <div class="topbar-left">
+                <a href="#" class="logo">
+                    <div class="logo-icon">SA</div>
+                    <span>Sentinel Atlas</span>
+                </a>
+                <div class="search-bar">
+                    <input type="text" placeholder="Search cases, reports, IOCs...">
+                </div>
+            </div>
+            <div class="topbar-right">
+                <div class="user-menu">
+                    <div class="user-avatar">AA</div>
+                    <span>Analyst Alpha</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <div style="font-size:0.75rem; font-weight:600; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em;">
+                    MSSP Intelligence Workbench
+                </div>
+                <div class="text-muted text-sm mt-1">On-premise CTI Platform</div>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="nav-group-title">Navigation</div>
+                <a href="#" class="nav-item active">
+                    <span class="nav-icon">🏠</span>
+                    <span>Analyst Home</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <span class="nav-icon">📁</span>
+                    <span>Research Cases</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <span class="nav-icon">📄</span>
+                    <span>CTI Feed</span>
+                </a>
+                <div class="nav-group-title">QRadar Inventory</div>
+                <a href="#" class="nav-item">
+                    <span class="nav-icon">📋</span>
+                    <span>Detection Rules</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <span class="nav-icon">🧩</span>
+                    <span>Building Blocks</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <span class="nav-icon">🔍</span>
+                    <span>Custom Fields</span>
+                </a>
+                <div class="nav-group-title">Hunting</div>
+                <a href="#" class="nav-item">
+                    <span class="nav-icon">🧠</span>
+                    <span>Hypothesis Lab</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <span class="nav-icon">🔗</span>
+                    <span>Evidence Graph</span>
+                </a>
+            </nav>
+            <div style="padding: 1rem 1.25rem; border-top: 1px solid var(--border); margin-top: auto;">
+                <div class="text-xs text-muted">Client: client-alpha</div>
+                <div class="text-xs text-muted">Sector: ENERGY</div>
+                <div class="text-xs text-muted mt-1">Role: CTI_ANALYST</div>
+                <div class="mt-2">
+                    <button class="btn btn-danger btn-sm w-full">Logout</button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main">
+            <div class="page-header">
+                <h1 class="page-title">Analyst Home</h1>
+                <p class="page-subtitle">Overview of active cases, CTI reports, and pending reviews for client-alpha</p>
+                <div class="page-actions">
+                    <button class="btn btn-primary">New Research Case</button>
+                    <button class="btn btn-secondary">View All Cases</button>
+                </div>
+            </div>
+
+            <!-- Stat Cards -->
+            <div class="grid-stats">
+                <div class="stat-card">
+                    <div class="stat-value">3</div>
+                    <div class="stat-label">Open Cases</div>
+                    <div class="stat-trend trend-up">↑ 1 vs yesterday</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">12</div>
+                    <div class="stat-label">CTI Reports</div>
+                    <div class="stat-trend trend-neutral">2 new today</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">4</div>
+                    <div class="stat-label">Pending Reviews</div>
+                    <div class="stat-trend trend-warning">⚠ requires action</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">8</div>
+                    <div class="stat-label">Active Hypotheses</div>
+                    <div class="stat-trend trend-up">↑ 2 this week</div>
+                </div>
+            </div>
+
+            <!-- Recent Cases -->
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">Recent Research Cases</span>
+                    <button class="btn btn-sm btn-secondary">View All</button>
+                </div>
+                <div class="card-body">
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th style="width: 18%;">Case ID</th>
+                                    <th>Title</th>
+                                    <th style="width: 14%;">Status</th>
+                                    <th style="width: 12%;">Priority</th>
+                                    <th style="width: 12%;">Client</th>
+                                    <th style="width: 16%;">Updated</th>
+                                    <th style="width: 12%;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="cursor: pointer;">
+                                    <td><code class="code">case-8f3a</code></td>
+                                    <td>Suspicious PowerShell Activity — Energy Sector</td>
+                                        <td><span class="badge badge-open">OPEN</span></td>
+                                    <td><span class="badge" style="background:#451a03;color:#fdba74;border:1px solid #f59e0b;">P1</span></td>
+                                    <td><span class="client-chip alpha">client-alpha</span></td>
+                                    <td><span class="text-muted">2h ago</span></td>
+                                    <td>
+                                        <button class="btn-icon" title="View Case">👁</button>
+                                    </td>
+                                </tr>
+                                <tr style="cursor: pointer;">
+                                    <td><code class="code">case-2b9c</code></td>
+                                    <td>Lazarus Group IOC Correlation</td>
+                                    <td><span class="badge badge-inprogress">IN_PROGRESS</span></td>
+                                    <td><span class="badge" style="background:#451a03;color:#fdba74;border:1px solid #f59e0b;">P2</span></td>
+                                    <td><span class="client-chip alpha">client-alpha</span></td>
+                                    <td><span class="text-muted">5h ago</span></td>
+                                    <td>
+                                        <button class="btn-icon" title="View Case">👁</button>
+                                    </td>
+                                </tr>
+                                <tr style="cursor: pointer;">
+                                    <td><code class="code">case-7d1e</code></td>
+                                    <td>APT29 Campaign TTP Analysis</td>
+                                    <td><span class="badge badge-review">REVIEW</span></td>
+                                    <td><span class="badge" style="background:#1e3a8a;color:#93c5fd;border:1px solid #3b82f6;">P1</span></td>
+                                    <td><span class="client-chip alpha">client-alpha</span></td>
+                                    <td><span class="text-muted">1d ago</span></td>
+                                    <td>
+                                        <button class="btn-icon" title="View Case">👁</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pending Reviews -->
+            <div class="card mt-3">
+                <div class="card-header">
+                    <span class="card-title">Pending Human Reviews</span>
+                </div>
+                <div class="card-body">
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th style="width: 20%;">Artifact ID</th>
+                                    <th>Source</th>
+                                    <th style="width: 16%;">Classification</th>
+                                    <th style="width: 18%;">Review Decision</th>
+                                    <th style="width: 14%;">Reviewer</th>
+                                    <th style="width: 16%;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code class="code">art-4421</code></td>
+                                    <td>octop scan</td>
+                                    <td><span class="badge" style="background:#1e3a8a;color:#93c5fd;border:1px solid #3b82f6;">CONFIDENTIAL</span></td>
+                                    <td><span class="badge badge-needs-data">NEEDS_MORE_DATA</span></td>
+                                    <td><span class="text-muted">—</span></td>
+                                    <td><button class="btn btn-sm btn-secondary">Review</button></td>
+                                </tr>
+                                <tr>
+                                    <td><code class="code">art-5590</code></td>
+                                    <td>manual upload</td>
+                                    <td><span class="badge" style="background:#1e3a8a;color:#93c5fd;border:1px solid #3b82f6;">INTERNAL</span></td>
+                                    <td><span class="badge badge-pending">PENDING</span></td>
+                                    <td><span class="text-muted">—</span></td>
+                                    <td><button class="btn btn-sm btn-secondary">Review</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Activity Timeline (compact) -->
+            <div class="card mt-3">
+                <div class="card-header">
+                    <span class="card-title">Recent Activity</span>
+                </div>
+                <div class="card-body">
+                    <div style="display:flex; flex-direction:column; gap:0.75rem;">
+                        <div class="flex items-center gap-2" style="font-size:0.875rem;">
+                            <div class="text-muted text-sm">2h ago</div>
+                            <div class="flex items-center gap-1">
+                                <span class="badge badge-view" style="font-size:0.65rem;">VIEW</span>
+                                <span class="text-secondary">analyst-alpha</span>
+                                <span class="text-muted">viewed case</span>
+                                <code class="code">case-8f3a</code>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2" style="font-size:0.875rem;">
+                            <div class="text-muted text-sm">5h ago</div>
+                            <div class="flex items-center gap-1">
+                                <span class="badge badge-edit" style="font-size:0.65rem;">EDIT</span>
+                                <span class="text-secondary">analyst-beta</span>
+                                <span class="text-muted">added artifact to</span>
+                                <code class="code">case-2b9c</code>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2" style="font-size:0.875rem;">
+                            <div class="text-muted text-sm">1d ago</div>
+                            <div class="flex items-center gap-1">
+                                <span class="badge badge-create" style="font-size:0.65rem;">CREATE</span>
+                                <span class="text-secondary">analyst-alpha</span>
+                                <span class="text-muted">created case</span>
+                                <code class="code">case-7d1e</code>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Demo interactions
+        document.querySelectorAll('.btn-icon').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const toast = document.createElement('div');
+                toast.className = 'notification';
+                toast.textContent = 'Opening case detail...';
+                document.body.appendChild(toast);
+                setTimeout(() => toast.remove(), 2000);
+            });
+        });
+    </script>
+</body>
+</html>

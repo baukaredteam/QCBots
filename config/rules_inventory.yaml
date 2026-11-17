@@ -1,0 +1,45 @@
+# Global QRadar Detection Rules Inventory
+# Global configuration - shared across all clients (not duplicated per client)
+# Source: Excel/CSV/JSON import from existing QRadar deployment
+# Status: NOT VERIFIED - import format to be confirmed with QRadar admin
+
+rules:
+  - rule_id: rule-001
+    rule_name: "Suspicious PowerShell Execution"
+    rule_description: "Detects PowerShell execution with encoded commands"
+    rule_type: "building_block"
+    mitre_tactics: ["execution"]
+    mitre_techniques: ["T1059.001"]
+    required_fields: ["username", "process_name", "command_line", "source_ip"]
+    required_log_sources: ["Windows Event Log", "Sysmon"]
+    rule_status: active
+    rule_version: "1.0"
+    last_updated: "2026-11-05T00:00:00Z"
+
+  - rule_id: rule-002
+    rule_name: "Possible Lateral Movement"
+    rule_description: "Detects SMB access to administrative shares"
+    rule_type: "building_block"
+    mitre_tactics: ["lateral_movement"]
+    mitre_techniques: ["T1021.002"]
+    required_fields: ["source_ip", "destination_ip", "share_name", "username"]
+    required_log_sources: ["Windows Event Log", "Firewall Log"]
+    rule_status: active
+    rule_version: "1.0"
+    last_updated: "2026-11-05T00:00:00Z"
+
+  - rule_id: rule-003
+    rule_name: "Credential Dumping Attempt"
+    rule_description: "Detects LSASS memory access patterns"
+    rule_type: "building_block"
+    mitre_tactics: ["credential_access"]
+    mitre_techniques: ["T1003"]
+    required_fields: ["process_name", "target_process", "access_rights", "source_ip"]
+    required_log_sources: ["Sysmon", "EDR Agent"]
+    rule_status: active
+    rule_version: "1.0"
+    last_updated: "2026-11-05T00:00:00Z"
+
+# Import source: Excel Inventory / CSV / JSON / Manual addition
+# Rule existence is NOT proof of effective detection
+# Must distinguish: Rule Exists / Required Fields Available / Telemetry Available / Rule Tested / Detection Observed

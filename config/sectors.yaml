@@ -1,0 +1,50 @@
+# Sector Definitions
+# Global configuration - shared across all clients
+
+sectors:
+  - sector_id: sector-001
+    sector_name: ENERGY
+    description: Energy and utilities sector
+    created_at: "2026-11-05T00:00:00Z"
+
+  - sector_id: sector-002
+    sector_name: FINANCE
+    description: Financial services and banking
+    created_at: "2026-11-05T00:00:00Z"
+
+  - sector_id: sector-003
+    sector_name: GOVERNMENT
+    description: Government and public sector
+    created_at: "2026-11-05T00:00:00Z"
+
+  - sector_id: sector-004
+    sector_name: TELECOMMUNICATIONS
+    description: Telecommunications and network providers
+    created_at: "2026-11-05T00:00:00Z"
+
+  - sector_id: sector-005
+    sector_name: HEALTHCARE
+    description: Healthcare and medical organizations
+    created_at: "2026-11-05T00:00:00Z"
+
+  - sector_id: sector-006
+    sector_name: MANUFACTURING
+    description: Manufacturing and industrial
+    created_at: "2026-11-05T00:00:00Z"
+
+  - sector_id: sector-007
+    sector_name: TRANSPORTATION
+    description: Transportation and logistics
+    created_at: "2026-11-05T00:00:00Z"
+
+  - sector_id: sector-008
+    sector_name: EDUCATION
+    description: Educational institutions
+    created_at: "2026-11-05T00:00:00Z"
+
+  - sector_id: sector-009
+    sector_name: RETAIL
+    description: Retail and e-commerce
+    created_at: "2026-11-05T00:00:00Z"
+
+# Extendable - add sectors as needed per company classification

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sentinel Atlas — Case Detail</title>
+<link rel="stylesheet" href="cases.css">
+</head>
+<body>
+<div class="app-shell">
+<header class="topbar">
+  <div class="topbar-left"><a href="cases-list.html" class="logo"><div class="logo-icon">SA</div><span>Sentinel Atlas</span></a></div>
+  <div class="topbar-right"><a class="btn btn-secondary btn-sm" href="cases-list.html">← Cases</a><div class="user-menu"><div class="user-avatar" id="avatar">?</div><span id="user-name">Loading…</span></div></div>
+</header>
+<aside class="sidebar">
+  <div class="sidebar-brand"><div class="brand-title">MSSP Intelligence Workbench</div></div>
+  <nav class="sidebar-nav">
+    <a href="cases-list.html" class="nav-item"><span class="nav-icon">📁</span><span>Research Cases</span></a>
+  </nav>
+  <div class="sidebar-foot">
+    <div class="text-muted text-sm" id="client-info">Clients: —</div>
+    <div class="text-muted text-sm" id="role-info">Role: —</div>
+    <button id="logout-btn" class="btn btn-danger btn-sm w-full">Logout</button>
+  </div>
+</aside>
+<main class="main">
+  <div id="state-loading" class="loading-state"><div class="spinner"></div><div>Loading case…</div></div>
+  <div id="state-forbidden" class="access-denied-state hidden"><div class="access-icon">🔒</div><div class="access-title">Access Denied</div><div class="access-subtitle">You are not authorized for this case or session expired.</div><a class="btn btn-secondary mt-3" href="login.html">Go to Login</a></div>
+  <div id="state-error" class="error-state hidden"><div class="error-title">Error</div><div class="error-msg" id="error-msg"></div></div>
+
+  <div id="detail-view" class="hidden">
+    <div class="page-header">
+      <h1 class="page-title" id="case-title">Case</h1>
+      <p class="page-subtitle" id="case-sub">—</p>
+      <div class="page-actions" id="case-badges"></div>
+    </div>
+    <div class="tabs" id="tabs">
+      <button class="tab active" data-tab="overview">Overview</button>
+      <button class="tab" data-tab="participants">Participants</button>
+      <button class="tab" data-tab="artifacts">Artifacts</button>
+      <button class="tab" data-tab="notes">Notes</button>
+      <button class="tab" data-tab="activity">Activity</button>
+      <button class="tab" data-tab="hypotheses">Hypotheses</button>
+    </div>
+
+    <section id="tab-overview" class="tab-panel">
+      <div class="card"><div class="card-header"><span class="card-title">Overview</span></div><div class="card-body">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+          <div><div class="filter-label">Title</div><div id="ov-title" class="text-muted">—</div>
+               <div class="filter-label" style="margin-top:.75rem;">Description</div><div id="ov-desc" class="text-muted">—</div>
+               <div class="filter-label" style="margin-top:.75rem;">Owner</div><div id="ov-owner" class="text-muted">—</div>
+               <div class="filter-label" style="margin-top:.75rem;">Timestamps</div><div id="ov-times" class="text-muted text-sm">—</div></div>
+          <div><div class="filter-label">Status / Priority</div><div id="ov-badges" style="margin-top:.5rem;"></div>
+               <div class="filter-label" style="margin-top:.75rem;">Participants</div><div id="ov-participants" class="text-muted text-sm">—</div>
+               <div class="filter-label" style="margin-top:.75rem;">Linked hypotheses</div><div id="ov-hypotheses" class="text-muted text-sm">—</div>
+               <div class="filter-label" style="margin-top:.75rem;">Evidence (artifacts)</div><div id="ov-artifacts" class="text-muted text-sm">—</div>
+               <div class="filter-label" style="margin-top:.75rem;">Recent activity</div><div id="ov-activity" class="text-muted text-sm">—</div></div>
+        </div>
+      </div></div>
+      <div class="card" style="margin-top:1rem;"><div class="card-header"><span class="card-title">Lifecycle</span></div><div class="card-body">
+        <div class="flex gap-2" style="flex-wrap:wrap;">
+          <select id="new-status" class="filter-select"><option value="IN_PROGRESS">IN_PROGRESS</option><option value="REVIEW">REVIEW</option><option value="CLOSED">CLOSED</option><option value="ARCHIVED">ARCHIVED</option></select>
+          <input id="close-reason" class="filter-input" placeholder="Closed reason (for CLOSED/ARCHIVED)">
+          <button id="transition-btn" class="btn btn-primary">Transition</button>
+        </div>
+        <div id="transition-error" style="color:var(--danger);margin-top:.5rem;"></div>
+        <p class="text-muted text-sm mt-2">Allowed: OPEN→IN_PROGRESS/CLOSED, IN_PROGRESS→REVIEW/CLOSED, REVIEW→CLOSED/ARCHIVED (admin/review), CLOSED→ARCHIVED. ARCHIVED is terminal.</p>
+      </div></div>
+    </section>
+
+    <section id="tab-participants" class="tab-panel hidden">
+      <div class="card"><div class="card-header"><span class="card-title">Participants</span><button id="reload-parts" class="btn btn-secondary btn-sm">Reload</button></div><div class="card-body">
+        <div id="participants-list"></div>
+        <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-top:1rem;">
+          <input id="part-user" class="filter-input" placeholder="user_id to add">
+          <select id="part-role" class="filter-select"><option value="VIEWER">VIEWER</option><option value="EDITOR">EDITOR</option></select>
+          <button id="add-part-btn" class="btn btn-primary">Add participant</button>
+          <button id="remove-part-btn" class="btn btn-secondary">Revoke selected</button>
+        </div>
+        <div id="part-error" style="color:var(--danger);margin-top:.5rem;"></div>
+      </div></div>
+    </section>
+
+    <section id="tab-artifacts" class="tab-panel hidden">
+      <div class="card"><div class="card-header"><span class="card-title">Evidence / Artifacts</span></div><div class="card-body">
+        <div id="artifacts-list"></div>
+        <div id="review-form" class="hidden" style="margin-top:1rem;border-top:1px solid var(--border);padding-top:1rem;">
+          <div class="filter-label">Review artifact</div>
+          <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.5rem;">
+            <select id="review-decision" class="filter-select"><option value="APPROVED">APPROVED</option><option value="REJECTED">REJECTED</option><option value="NEEDS_MORE_DATA">NEEDS_MORE_DATA</option></select>
+            <input id="review-reason" class="filter-input" placeholder="Reason">
+            <button id="submit-review" class="btn btn-primary">Submit review</button>
+          </div>
+          <div id="review-error" style="color:var(--danger);margin-top:.5rem;"></div>
+          <div id="review-ok" style="color:var(--success);margin-top:.5rem;"></div>
+        </div>
+      </div></div>
+    </section>
+
+    <section id="tab-notes" class="tab-panel hidden">
+      <div class="card"><div class="card-header"><span class="card-title">Analyst Notes</span></div><div class="card-body">
+        <div id="notes-list"></div>
+        <form id="note-form" style="margin-top:1rem;border-top:1px solid var(--border);padding-top:1rem;">
+          <div class="filter-label">New note (textContent only, never innerHTML)</div>
+          <textarea id="note-text" class="filter-input" rows="3" style="width:100%;margin-top:.5rem;" required></textarea>
+          <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.5rem;">
+            <select id="note-scope" class="filter-select"><option value="CLIENT">CLIENT</option><option value="GLOBAL">GLOBAL</option></select>
+            <select id="note-type" class="filter-select"><option value="observation">observation</option><option value="finding">finding</option><option value="question">question</option><option value="escalation">escalation</option></select>
+            <input id="note-client" class="filter-input" placeholder="client_id (for CLIENT)">
+            <button class="btn btn-primary" type="submit">Add note</button>
+          </div>
+          <div id="note-error" style="color:var(--danger);margin-top:.5rem;"></div>
+        </form>
+      </div></div>
+    </section>
+
+    <section id="tab-activity" class="tab-panel hidden">
+      <div class="card"><div class="card-header"><span class="card-title">Activity Timeline (permission-aware)</span><span class="text-muted text-sm" id="activity-total"></span></div><div class="card-body"><div id="activity-list"></div></div></div>
+    </section>
+
+    <section id="tab-hypotheses" class="tab-panel hidden">
+      <div class="card"><div class="card-header"><span class="card-title">Hypotheses & Investigations</span></div><div class="card-body">
+        <div id="hyp-list"></div>
+        <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-top:1rem;">
+          <select id="hyp-select" class="filter-select" style="min-width:280px;"><option value="">Select hypothesis…</option></select>
+          <select id="hyp-client-select" class="filter-select"><option value="">Select client…</option></select>
+          <button id="link-hyp-btn" class="btn btn-primary">Link</button>
+          <button id="unlink-hyp-btn" class="btn btn-secondary">Unlink</button>
+        </div>
+        <div id="hyp-error" style="color:var(--danger);margin-top:.5rem;"></div>
+        <form id="hyp-review-form" style="margin-top:1rem;border-top:1px solid var(--border);padding-top:1rem;">
+          <div class="filter-label">Per-client hypothesis review</div>
+          <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.5rem;">
+            <select id="hr-hyp" class="filter-select" style="min-width:220px;"><option value="">Select hypothesis…</option></select>
+            <select id="hr-client" class="filter-select"><option value="">Select client…</option></select>
+            <select id="hr-decision" class="filter-select"><option value="APPROVED">APPROVED</option><option value="REJECTED">REJECTED</option><option value="NEEDS_MORE_DATA">NEEDS_MORE_DATA</option></select>
+            <button class="btn btn-primary" type="submit">Submit review</button>
+          </div>
+          <div id="hr-error" style="color:var(--danger);margin-top:.5rem;"></div>
+        </form>
+        <form id="inv-form" style="margin-top:1rem;border-top:1px solid var(--border);padding-top:1rem;">
+          <div class="filter-label">Create investigation</div>
+          <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.5rem;">
+            <select id="inv-hyp" class="filter-select" style="min-width:220px;"><option value="">Select linked hypothesis…</option></select>
+            <select id="inv-client" class="filter-select"><option value="">Select client…</option></select>
+            <input id="inv-range" class="filter-input" placeholder="time_range">
+            <button class="btn btn-primary" type="submit">Create</button>
+          </div>
+          <div id="inv-error" style="color:var(--danger);margin-top:.5rem;"></div>
+          <div id="inv-ok" style="color:var(--success);margin-top:.5rem;"></div>
+        </form>
+      </div></div>
+    </section>
+  </div>
+</main>
+</div>
+
+<script src="api.js"></script>
+<script src="case-detail.js"></script>
+</body>
+</html>

@@ -1,0 +1,34 @@
+# MITRE ATT&CK Mappings
+# Global configuration - shared across all clients
+# Status: NOT VERIFIED - technique list to be confirmed against ATT&CK framework
+
+mitre_techniques:
+  - technique_id: "T1059"
+    technique_name: "Command and Scripting Interpreter"
+    tactic: "execution"
+    sub_techniques:
+      - "T1059.001"  # PowerShell
+      - "T1059.003"  # Windows Command Shell
+      - "T1059.005"  # Visual Basic
+
+  - technique_id: "T1021"
+    technique_name: "Remote Services"
+    tactic: "lateral_movement"
+    sub_techniques:
+      - "T1021.002"  # SMB/Windows Admin Shares
+      - "T1021.001"  # Remote Desktop Protocol
+
+  - technique_id: "T1003"
+    technique_name: "OS Credential Dumping"
+    tactic: "credential_access"
+    sub_techniques:
+      - "T1003.001"  # LSASS Memory
+
+  - technique_id: "T1566"
+    technique_name: "Phishing"
+    tactic: "initial_access"
+    sub_techniques:
+      - "T1566.001"  # Spearphishing Attachment
+
+# Mapping source: MITRE ATT&CK framework (https://attack.mitre.org/)
+# Verify against current ATT&CK version before production use

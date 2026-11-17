@@ -1,0 +1,18 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Intelligence Hub — prototype</title><link rel="stylesheet" href="v2.css"></head><body>
+<div class="shell"><aside class="sb"><div class="sb-brand"><div class="logo">SA</div><div><div class="sb-title">Sentinel Atlas</div><div class="sb-sub">Hybrid CTI + SOC</div></div></div><nav class="sb-nav"><div class="sb-group">Intelligence</div><a class="active">CTI Feed <span class="tag">Prototype</span></a><a>Report Explorer <span class="tag">Backend-gap</span></a><a href="research-cases-explorer.html">Research Cases</a></nav><div class="sb-foot"><div class="text-sm text-muted">Design-only where marked.</div></div></aside>
+<main class="main"><header class="top"><div class="crumb">Intelligence / <strong>CTI Feed</strong></div><div class="top-right"><span class="chip">Global Research</span></div></header>
+<div style="margin-top:1rem">
+<div class="filterbar"><select><option>All sources</option><option>ThreadLinqs</option></select><input placeholder="Search reports (client-side filter prototype)"><span class="tag tag-gap">No backend feed API</span></div>
+<div class="layout-2col">
+<section>
+  <article class="card"><div class="card-h">Report: APT29 Campaign — Energy Sector <span class="badge b-review">BACKEND-GAP</span></div><div class="card-b">
+    <p class="text-muted">Source: ThreadLinqs (MCP, pending approval). Reliability: unverified. Confidence: prototype-only — **no real IOC/confidence fields exist yet**. Create Case uses existing `POST /api/v1/cases` with stable idempotency key.</p>
+    <button class="btn btn-primary" onclick="alert('Prototype: would POST /api/v1/cases (EXISTING)')">Create / Open Research Case</button>
+    <p class="text-sm text-muted" style="margin-top:.5rem">Related entities (IOCs/TTPs/CVEs) — PLANNED (no explorer API).</p>
+  </div></article>
+  <article class="card" style="margin-top:1rem"><div class="card-h">Client relevance (where available)</div><div class="card-b"><p class="text-muted">Sector mapping exists in CTI pipeline (M5.1), but not as a standalone Hub API. Shown as BACKEND-GAP in this prototype.</p></div></article>
+</section>
+<aside><div class="card"><div class="card-h">Provenance</div><div class="card-b"><div class="kv"><span class="kv-k">Source</span><span class="kv-v">ThreadLinqs MCP (approval pending)</span></div><div class="kv"><span class="kv-k">Checksum</span><span class="kv-v"><code>sha256:…</code> (prototype)</span></div><div class="kv"><span class="kv-k">Reliability</span><span class="kv-v">Unknown — do not present as validated</span></div></div></div></aside>
+</div></div></main>
+<aside class="inspector"><div class="ins-h">Inspector</div><div class="ins-b"><p class="text-muted text-sm">Selected report, related IOC/TTP/CVE entities, client relevance and provenance would appear here. Entity closure is PLANNED.</p></div></aside>
+</div></body></html>

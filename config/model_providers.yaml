@@ -1,0 +1,52 @@
+# Model Provider Configuration
+# Provider-independent LLM architecture - configurable via adapter
+# Specific LLM provider NOT yet chosen (per TECHNICAL_SPECIFICATION.md Section 4.3)
+
+providers:
+  - provider_id: provider-001
+    provider_name: "Local LLM"
+    provider_type: "local"
+    api_endpoint: ""
+    api_key_required: false
+    model_name: ""
+    model_version: ""
+    status: "not_configured"
+    adapter: "local_llm_adapter"
+    capabilities:
+      - "text_generation"
+      - "structured_output"
+    created_at: "2026-11-05T00:00:00Z"
+
+  - provider_id: provider-002
+    provider_name: "OpenAI-compatible API"
+    provider_type: "openai_compatible"
+    api_endpoint: ""
+    api_key_required: true
+    model_name: ""
+    model_version: ""
+    status: "not_configured"
+    adapter: "openai_compatible_adapter"
+    capabilities:
+      - "text_generation"
+      - "structured_output"
+      - "function_calling"
+    created_at: "2026-11-05T00:00:00Z"
+
+  - provider_id: provider-003
+    provider_name: "Other Approved External LLM API"
+    provider_type: "external"
+    api_endpoint: ""
+    api_key_required: true
+    model_name: ""
+    model_version: ""
+    status: "not_configured"
+    adapter: "external_adapter"
+    capabilities: []
+    created_at: "2026-11-05T00:00:00Z"
+
+# Configuration rules:
+# - Model provider selected via configuration, not hardcoded
+# - No hard binding of business logic to one model or API
+# - External LLM API use requires security policy approval
+# - Client data not sent to external LLM without permission
+# - No API keys in source code (use environment variables or secret store)

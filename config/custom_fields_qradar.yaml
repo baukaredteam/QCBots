@@ -1,0 +1,58 @@
+# Custom QRadar Field Definitions
+# Global configuration - shared across all clients
+# Must use real field names and IDs from existing QRadar
+# No fictitious fields
+# Status: NOT VERIFIED - field names to be confirmed with QRadar admin
+
+fields:
+  - field_id: field-001
+    field_name: "username"
+    field_type: "string"
+    field_description: "Authenticated user account name"
+    source_type: "log_source"
+    normalized_name: "username"
+    aliases: ["user", "account_name", "logon_user"]
+    is_active: true
+    created_at: "2026-11-05T00:00:00Z"
+
+  - field_id: field-002
+    field_name: "source_ip"
+    field_type: "ip"
+    field_description: "Source IP address of the event"
+    source_type: "log_source"
+    normalized_name: "source_ip"
+    aliases: ["src_ip", "source_address", "client_ip"]
+    is_active: true
+    created_at: "2026-11-05T00:00:00Z"
+
+  - field_id: field-003
+    field_name: "destination_ip"
+    field_type: "ip"
+    field_description: "Destination IP address of the event"
+    source_type: "log_source"
+    normalized_name: "destination_ip"
+    aliases: ["dst_ip", "destination_address", "server_ip"]
+    is_active: true
+    created_at: "2026-11-05T00:00:00Z"
+
+  - field_id: field-004
+    field_name: "process_name"
+    field_type: "string"
+    field_description: "Name of the executing process"
+    source_type: "log_source"
+    normalized_name: "process_name"
+    aliases: ["process", "image_name", "executable"]
+    is_active: true
+    created_at: "2026-11-05T00:00:00Z"
+
+  - field_id: field-005
+    field_name: "command_line"
+    field_type: "string"
+    field_description: "Full command line used to start the process"
+    source_type: "log_source"
+    normalized_name: "command_line"
+    aliases: ["cmd", "command", "process_command_line"]
+    is_active: true
+    created_at: "2026-11-05T00:00:00Z"
+
+# Real QRadar field names and IDs must be confirmed before production use

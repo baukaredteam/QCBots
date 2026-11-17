@@ -1,0 +1,15 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Cases Explorer — prototype (functional API)</title><link rel="stylesheet" href="v2.css"></head><body>
+<div class="shell"><aside class="sb"><div class="sb-brand"><div class="logo">SA</div><div><div class="sb-title">Sentinel Atlas</div></div></div><nav class="sb-nav"><div class="sb-group">Intelligence</div><a href="intelligence-hub.html">CTI Feed</a><a class="active">Research Cases</a></nav><div class="sb-foot"><div class="text-sm text-muted">Functional: GET /api/v1/cases</div></div></aside>
+<main class="main"><header class="top"><div class="crumb">Intelligence / <strong>Research Cases</strong></div><div class="top-right"><span class="chip">client-alpha (ENERGY)</span><span class="chip">analyst-alpha • CTI_ANALYST</span></div></header>
+<div style="margin-top:1rem">
+<div class="filterbar"><input placeholder="Search title or ID"><select><option>All statuses</option><option>OPEN</option></select><select><option>All priorities</option></select><select><option>All clients</option><option>client-alpha</option></select><button class="btn btn-primary">+ New Case</button>
+<span class="text-sm text-muted">Saved filters concept — FRONTEND-ONLY</span></div>
+<div class="card"><div class="card-h">Cases <span class="text-muted text-sm">2 of 2 (permission-aware total)</span></div>
+<div class="table-wrap"><table><thead><tr><th>#</th><th>Case ID</th><th>Title</th><th>Status</th><th>Priority</th><th>Updated</th><th>Actions</th></tr></thead><tbody>
+<tr><td>1</td><td><code>91e3a2…</code></td><td>Suspicious PowerShell Activity</td><td><span class="badge b-open">OPEN</span></td><td><span class="badge b-review">P1</span></td><td>2026-11-08</td><td><a class="btn btn-secondary" href="research-case-workspace.html">Open</a></td></tr>
+<tr><td>2</td><td><code>44bd01…</code></td><td>Beta Private Case</td><td colspan="4" class="text-muted">Not visible — different tenant (no cross-client leakage)</td></tr>
+</tbody></table></div></div>
+<p class="text-sm text-muted" style="margin-top:.5rem">Pagination and counts come from the real API total. Missing permission → 403 state, never an empty list. Empty/loading/error states reuse M6 `cases-list` components.</p>
+</div></main>
+<aside class="inspector"><div class="ins-h">Inspector</div><div class="ins-b"><p class="text-muted text-sm">Selected case context (owner, access scope, recent activity) appears here. GLOBAL case metadata ≠ CLIENT content access.</p></div></aside>
+</div></body></html>

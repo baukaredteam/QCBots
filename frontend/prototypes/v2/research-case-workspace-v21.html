@@ -1,0 +1,350 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sentinel Atlas — Research Case Workspace v2.1 (interactive prototype)</title>
+<link rel="stylesheet" href="workspace-v21.css">
+<style>
+.left .nav a{display:flex;align-items:center;gap:.625rem;padding:.5625rem 1.25rem;color:var(--tx2);text-decoration:none;border-left:3px solid transparent}
+.left .nav a.active{background:var(--accent-bg);color:var(--accent);border-left-color:var(--accent)}
+.left .grp{font-size:.6875rem;text-transform:uppercase;letter-spacing:.05em;color:var(--dim);padding:.75rem 1.25rem .375rem}
+.left .foot{margin-top:auto;padding:1rem;border-top:1px solid var(--line)}
+.tabs{display:flex;gap:0;border-bottom:1px solid var(--line);margin-bottom:1rem;overflow-x:auto}
+.tab{padding:.75rem 1rem;border:1px solid transparent;border-bottom:none;background:transparent;color:var(--mut);cursor:pointer;font-size:.875rem;white-space:nowrap}
+.tab.active{color:var(--accent);border-bottom:2px solid var(--accent);background:var(--bg-0)}
+.tab-panel{display:none}.tab-panel.active{display:block}
+.sel-row{display:grid;grid-template-columns:1fr;padding:.75rem;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--bg-0);cursor:pointer;text-align:left;color:var(--tx2);width:100%;margin-bottom:.5rem}
+.sel-row.sel{border-color:var(--accent);background:var(--accent-bg)}
+.tl{display:flex;flex-direction:column;gap:.5rem}
+.tl-i{display:flex;gap:.75rem;padding:.5rem 0;border-bottom:1px solid var(--line);font-size:.8125rem;color:var(--tx2)}
+.tl-d{width:8px;height:8px;border-radius:50%;background:var(--accent);margin-top:.375rem;flex-shrink:0}
+.pill{display:inline-flex;padding:.125rem .5rem;border-radius:999px;font-size:.625rem;font-weight:600;text-transform:uppercase;margin-right:.25rem}
+.p-synth{border:1px solid var(--info);color:#7dd3fc}.p-real{border:1px solid var(--ok);color:#6ee7b7}.p-plan{border:1px solid var(--warn);color:#fdba74}
+.note{border:1px solid var(--line);border-radius:var(--r-sm);padding:.75rem 1rem;margin-bottom:.75rem}
+.note .h{display:flex;gap:.5rem;align-items:baseline;margin-bottom:.5rem}
+select,input,textarea{background:var(--bg-0);border:1px solid var(--line);border-radius:var(--r-sm);color:var(--tx);padding:.5rem .75rem;font-size:.875rem}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:420px;max-width:92vw;background:var(--bg-1);border-left:1px solid var(--line);z-index:2000;padding:1.25rem;overflow-y:auto;transform:translateX(105%);transition:transform .25s}
+.drawer.open{transform:none}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:1900;display:none}
+.overlay.open{display:block}
+.hist-row{display:flex;justify-content:space-between;border-bottom:1px solid var(--line);padding:.375rem 0;font-size:.8125rem;color:var(--tx2)}
+.scope-switch{display:flex;gap:.5rem;align-items:center}
+</style>
+</head><body>
+<div class="shell">
+<!-- LEFT — global navigation -->
+<aside class="left" aria-label="Primary">
+  <a href="#" class="logo" style="display:flex;align-items:center;gap:.5rem;padding:1rem;font-weight:700;color:var(--tx);text-decoration:none"><span class="logo-icon" style="width:28px;height:28px;background:linear-gradient(135deg,#3b82f6,#8b5cf6);border-radius:.375rem;display:flex;align-items:center;justify-content:center;font-size:.75rem">SA</span><span class="lbl">Sentinel Atlas</span></a>
+  <nav class="nav" aria-label="Workspace">
+    <div class="grp">Home</div><a href="analyst-home.html"><span>🏠</span><span class="lbl">Analyst Home</span></a><a href="research-cases-explorer.html"><span>📁</span><span class="lbl">Research Cases</span></a>
+    <div class="grp">Workspace</div><a href="research-case-workspace.html" class="active" aria-current="page"><span>🔍</span><span class="lbl">Case Workspace v2.1</span></a><a href="hypothesis-hunt-workspace.html"><span>🧠</span><span class="lbl">Hypothesis Lab</span></a>
+    <div class="grp">Intelligence</div><a href="intelligence-hub.html"><span>📄</span><span class="lbl">CTI Feed</span></a>
+  </nav>
+  <div class="foot"><div class="text-sm text-muted">Standalone prototype — synthetic data only. No production API calls.</div></div>
+</aside>
+
+<!-- TOP -->
+<header class="top">
+  <div style="display:flex;gap:.75rem;align-items:center">
+    <a href="research-cases-explorer.html" class="btn btn-s btn-sm">← Cases</a>
+    <span class="crumb" style="color:var(--mut)">Research Cases / <strong style="color:var(--tx)">case-8f3a</strong></span>
+  </div>
+  <div style="display:flex;gap:.5rem;align-items:center">
+    <label class="kv-k" for="ctx">Context</label>
+    <select id="ctx" aria-label="Client context">
+      <option value="GLOBAL">Global Research (metadata only)</option>
+      <option value="client-alpha">client-alpha (authorized)</option>
+      <option value="client-beta" disabled>client-beta (no grant — hidden)</option>
+    </select>
+    <span class="chip" style="background:var(--bg-0);border:1px solid var(--line);border-radius:999px;padding:.25rem .75rem;font-size:.75rem;color:var(--tx2)">analyst-alpha • CTI_ANALYST</span>
+  </div>
+</header>
+
+<!-- MAIN -->
+<main class="main" id="main">
+  <div id="state-loading" class="card" style="padding:2rem"><div class="text-muted">Loading…</div></div>
+  <div id="workspace" class="hidden">
+    <section class="card"><div class="card-h">Research Summary <span><span class="tag tag-real">REAL API DATA (when live)</span> <span class="tag tag-synth">SYNTHETIC in prototype</span></span></div><div class="card-b">
+      <h1 id="case-title" style="font-size:1.25rem;margin-bottom:.5rem">Case — Suspicious PowerShell Activity</h1>
+      <p class="text-muted" id="case-desc">Encoded PowerShell, WMI lateral movement, credential dumping attempts. Prototype summary — not a finding.</p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1rem;margin-top:1rem">
+        <div><div class="kv-k">Owner</div><div class="kv-v">analyst-alpha</div></div>
+        <div><div class="kv-k">Status</div><div class="kv-v"><span class="badge b-open">OPEN</span></div></div>
+        <div><div class="kv-k">Priority</div><div class="kv-v">P1</div></div>
+        <div><div class="kv-k">Created / Updated</div><div class="kv-v">2026-11-05 • 2h ago</div></div>
+        <div><div class="kv-k">Scope</div><div class="kv-v">GLOBAL metadata; CLIENT content by grant</div></div>
+        <div><div class="kv-k">Participants</div><div class="kv-v">analyst-alpha (OWNER), reviewer (REVIEWER)</div></div>
+      </div>
+      <div style="margin-top:1rem;display:flex;gap:.5rem;flex-wrap:wrap">
+        <button class="btn btn-s btn-sm" data-open-drawer="lifecycle">Change status</button>
+        <button class="btn btn-s btn-sm" data-open-drawer="participants">Participants</button>
+        <button class="btn btn-s btn-sm" data-open-drawer="review">Review</button>
+      </div>
+    </div></section>
+
+    <div class="tabs" role="tablist" aria-label="Case sections">
+      <button class="tab active" role="tab" data-tab="overview" aria-selected="true">Overview</button>
+      <button class="tab" role="tab" data-tab="hypotheses" aria-selected="false">Hypotheses</button>
+      <button class="tab" role="tab" data-tab="evidence" aria-selected="false">Evidence</button>
+      <button class="tab" role="tab" data-tab="investigations" aria-selected="false">Investigations</button>
+      <button class="tab" role="tab" data-tab="notes" aria-selected="false">Notes</button>
+      <button class="tab" role="tab" data-tab="timeline" aria-selected="false">Timeline</button>
+    </div>
+
+    <section id="tab-overview" class="tab-panel active" role="tabpanel">
+      <div class="card"><div class="card-h">CTI context <span class="tag tag-plan">BACKEND-GAP: CTI Reports API exists but report-detail/explorer is limited</span></div><div class="card-b">
+        <p class="text-muted">Linked CTI reports via <code>GET /api/v1/cti/reports/{id}</code> (EXISTING). This prototype does not fetch them — showing the surface and degraded state instead of inventing reports.</p>
+        <div class="kv"><span class="kv-k">Prototype note</span><span class="kv-v">In production, linked reports would render here with provenance.</span></div>
+      </div></div>
+      <div class="card"><div class="card-h">Linked hypotheses (summary)</div><div class="card-b"><div id="ov-hyp"></div></div></div>
+      <div class="card"><div class="card-h">Evidence (summary)</div><div class="card-b"><div id="ov-evi"></div></div></div>
+      <div class="card"><div class="card-h">Recent activity</div><div class="card-b" id="ov-act"></div></div>
+    </section>
+
+    <section id="tab-hypotheses" class="tab-panel" role="tabpanel">
+      <div class="card"><div class="card-h">Linked Hypotheses <span class="tag tag-real">EXISTING: GET/POST …/hypotheses</span></div><div class="card-b">
+        <div id="hyp-list" role="listbox" aria-label="Hypotheses"></div>
+        <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-top:1rem">
+          <select id="link-select" aria-label="Available hypothesis to link"><option value="">Select hypothesis…</option></select>
+          <button class="btn btn-p btn-sm" id="link-btn">Link</button>
+        </div>
+        <p class="text-sm text-muted" style="margin-top:.75rem">Selection comes from <code>GET /api/v1/hypotheses</code> in production; this prototype uses local synthetic list and never calls the API.</p>
+      </div></div>
+    </section>
+
+    <section id="tab-evidence" class="tab-panel" role="tabpanel">
+      <div class="card"><div class="card-h">Evidence <span class="tag tag-real">EXISTING: GET /cases/{id} artifacts</span></div><div class="card-b"><div id="ev-list" role="listbox" aria-label="Evidence"></div></div></div>
+    </section>
+
+    <section id="tab-investigations" class="tab-panel" role="tabpanel">
+      <div class="card"><div class="card-h">Investigations <span class="tag tag-real">EXISTING: GET/POST …/investigations</span></div><div class="card-b">
+        <div id="inv-list"></div>
+        <button class="btn btn-primary btn-sm" style="margin-top:1rem" data-open-drawer="investigation">Create investigation</button>
+        <p class="text-sm text-muted" style="margin-top:.5rem">Hunt execution outcome (TP/FP) lives in <code>final_verdict</code> — never inferred from review decision.</p>
+      </div></div>
+    </section>
+
+    <section id="tab-notes" class="tab-panel" role="tabpanel">
+      <div class="card"><div class="card-h">Analyst Notes <span class="tag tag-real">EXISTING: …/notes</span></div><div class="card-b">
+        <div id="notes-list"></div>
+        <form id="note-form" style="margin-top:1rem;border-top:1px solid var(--line);padding-top:1rem">
+          <label class="kv-k" for="note-text">New note — synthetic only</label>
+          <textarea id="note-text" rows="3" style="width:100%;margin-top:.5rem" placeholder="Type a note (textContent only, never innerHTML)"></textarea>
+          <div style="display:flex;gap:.5rem;margin-top:.5rem;flex-wrap:wrap">
+            <select id="note-scope" aria-label="Note scope"><option value="GLOBAL">GLOBAL</option><option value="CLIENT">CLIENT</option></select>
+            <select id="note-type" aria-label="Note type"><option>observation</option><option>finding</option><option>question</option><option>escalation</option></select>
+            <button class="btn btn-primary btn-sm" type="submit">Add note (prototype)</button>
+          </div>
+          <p class="text-sm text-muted" style="margin-top:.5rem">GLOBAL notes must not contain a client_id string — frontend guard only; backend enforces.</p>
+        </form>
+      </div></div>
+    </section>
+
+    <section id="tab-timeline" class="tab-panel" role="tabpanel">
+      <div class="card"><div class="card-h">Timeline <span class="tag tag-real">EXISTING: GET …/activity</span></div><div class="card-b"><div class="tl" id="tl"></div></div></div>
+    </section>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-top:1rem">
+      <div class="card"><div class="card-h">Client Relevance</div><div class="card-b"><p class="text-muted" id="relevance">primary_client = client-alpha (creation context, not a boundary). CLIENT content requires grants.</p></div></div>
+    </div>
+
+  </div>
+</main>
+
+<!-- RIGHT INSPECTOR -->
+<aside class="right" id="inspector" aria-live="polite">
+  <div class="kv-k" style="margin-bottom:.5rem">Context Inspector <span class="tag tag-synth">SYNTHETIC selection</span></div>
+  <div id="ins-body"><p class="text-muted text-sm">Select a hypothesis, artifact, IOC/TTP or hypothesis in the workspace. Selection updates this inspector. GLOBAL/CLIENT switch filters visible objects only — beta objects are absent from the list, not hidden in DOM.</p></div>
+</aside>
+</div>
+
+<div class="overlay" id="overlay"></div>
+<div class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="drawer-title">
+  <h3 id="drawer-title" style="margin-bottom:1rem">Drawer</h3>
+  <div id="drawer-body"></div>
+  <button class="btn btn-s" id="drawer-close" style="margin-top:1rem">Close (Esc)</button>
+</div>
+
+<script>
+"use strict";
+/* Synthetic data — labelled, never fetched, never sent anywhere. */
+const SYNTH = {
+  case: { title:"Suspicious PowerShell Activity", desc:"Encoded PowerShell, WMI lateral movement, credential dumping attempts (synthetic summary).", owner:"analyst-alpha", status:"OPEN", priority:"P1" },
+  hypotheses: [
+    {id:"hyp-1122", title:"APT29 targeting energy SCADA via PowerShell", client:"client-alpha", status:"REVIEW", ttp:["T1059.001","T1021","T1003"], latest:"APPROVED", tele:"Sysmon + PowerShell logs", coverage:"PARTIAL", aql:"SELECT * FROM events WHERE eventName CONTAINS 'powershell' AND severity >= 5 (prototype — not deployed)", findings:"Synthetic finding draft.", outcome:"No execution — UI preview only."},
+    {id:"hyp-3344", title:"Lazarus IOC correlation with known infrastructure", client:"client-alpha", status:"GENERATED", ttp:["T1071.001"], latest:"PENDING", tele:"—", coverage:"UNKNOWN", aql:"(not drafted)", findings:"", outcome:""}
+  ],
+  artifacts: [
+    {id:"art-4421", kind:"PowerShell Command", source:"octop scan", classification:"CONFIDENTIAL", provenance:"report-alpha-1", hash:"sha256:a1b2c3…", client:"client-alpha", review:"PENDING"},
+    {id:"art-5590", kind:"IP Indicator", source:"manual upload", classification:"INTERNAL", provenance:"analyst note", hash:"sha256:d4e5f6…", client:"client-alpha", review:"PENDING"}
+  ],
+  investigations: [],
+  notes: [
+    {id:"n1", type:"observation", scope:"GLOBAL", client:"", body:"Global observation (synthetic).", revisions:[{at:"2026-11-08 09:25", by:"analyst-alpha"}]},
+    {id:"n2", type:"finding", scope:"CLIENT", client:"client-alpha", body:"Alpha-only finding body (synthetic).", revisions:[{at:"2026-11-08 09:25", by:"analyst-alpha"}]}
+  ],
+  activity: [
+    {t:"10:02", a:"hypothesis_linked", s:"CLIENT", c:"client-alpha", d:"hyp-1122"},
+    {t:"10:11", a:"note_added", s:"CLIENT", c:"client-alpha", d:"n2:finding"},
+    {t:"10:12", a:"status_changed", s:"GLOBAL", c:"", d:"OPEN→IN_PROGRESS"}
+  ]
+};
+const BY_ID = Object.fromEntries(SYNTH.hypotheses.map(h=>[h.id,h]));
+const EV_BY_ID = Object.fromEntries(SYNTH.artifacts.map(a=>[a.id,a]));
+
+function el(tag, text, cls){ const n=document.createElement(tag); if(text!=null) n.textContent=text; if(cls) n.className=cls; return n; }
+function scopeAllows(scope, client, ctx){ if(scope==="GLOBAL") return true; return ctx==="GLOBAL" ? false : client===ctx; }
+function visibleHyp(ctx){ if(ctx==="GLOBAL") return SYNTH.hypotheses.filter(()=>false); return SYNTH.hypotheses.filter(h=>h.client===ctx); }
+function visibleArt(ctx){ return SYNTH.artifacts.filter(a=>a.client===ctx); }
+
+function renderOverview(){
+  document.getElementById('case-title').textContent = SYNTH.case.title;
+  document.getElementById('case-desc').textContent = SYNTH.case.desc;
+  document.getElementById('ov-hyp').textContent = SYNTH.hypotheses.length + " linked (filter by Context)";
+  document.getElementById('ov-evi').textContent = SYNTH.artifacts.length + " artifacts (grant-filtered)";
+  document.getElementById('ov-act').textContent = SYNTH.activity.length + " events (visible only)";
+}
+function renderHyp(){
+  const ctx=document.getElementById('ctx').value;
+  const box=document.getElementById('hyp-list'); box.innerHTML='';
+  const vis = visibleHyp(ctx);
+  if(!vis.length) box.textContent="No hypotheses visible for this context (CLIENT-filtered).";
+  vis.forEach(h=>{
+    const btn=el('button',null,'sel-row'); btn.setAttribute('role','option'); btn.setAttribute('tabindex','0');
+    const t=el('div'); t.textContent=h.id+" • "+h.title+" • "+h.client+" • "+h.status;
+    const l=el('div', "Latest review: "+(h.latest||"none")); l.className='text-sm text-muted';
+    btn.appendChild(t); btn.appendChild(l);
+    const open=()=>inspect({type:'hypothesis', id:h.id});
+    btn.addEventListener('click',open);
+    btn.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' ') {e.preventDefault(); open();}});
+    box.appendChild(btn);
+  });
+  const sel=document.getElementById('link-select'); sel.innerHTML='';
+  const ph=el('option',"Select hypothesis…"); ph.value=''; sel.appendChild(ph);
+  vis.forEach(h=>{ const o=el('option',h.id+" • "+h.title); o.value=h.id; sel.appendChild(o); });
+}
+function renderEv(){
+  const ctx=document.getElementById('ctx').value;
+  const box=document.getElementById('ev-list'); box.innerHTML='';
+  const vis=visibleArt(ctx);
+  if(!vis.length) box.textContent="No artifacts visible for this context.";
+  vis.forEach(a=>{
+    const btn=el('button',null,'sel-row'); btn.setAttribute('role','option');
+    const t=el('div'); t.textContent=a.id+" • "+a.kind+" • "+a.classification+" • "+a.client;
+    btn.appendChild(t);
+    const open=()=>inspect({type:'artifact', id:a.id});
+    btn.addEventListener('click',open);
+    box.appendChild(btn);
+  });
+}
+function renderNotes(){
+  const ctx=document.getElementById('ctx').value;
+  const box=document.getElementById('notes-list'); box.innerHTML='';
+  SYNTH.notes.filter(n=> scopeAllows(n.scope, n.client, ctx)).forEach(n=>{
+    const d=el('div',null,'note');
+    const h=el('div',n.type+" • "+n.scope+" • "+(n.client||"GLOBAL")+" • "+n.revisions[0].by);
+    const b=el('p',n.body); b.style.marginTop=".5rem";
+    d.appendChild(h); d.appendChild(b);
+    n.revisions.forEach(r=>{ const rv=el('div',"Rev "+r.at+" by "+r.by+" — append-only",'text-sm text-muted'); rv.style.marginTop=".5rem"; d.appendChild(rv); });
+    box.appendChild(d);
+  });
+  if(!box.childNodes.length) box.textContent="No notes visible.";
+}
+function renderInv(){
+  const ctx=document.getElementById('ctx').value;
+  const box=document.getElementById('inv-list'); box.innerHTML='';
+  const vis=SYNTH.investigations.filter(i=>i.client===ctx);
+  if(!vis.length) box.textContent="No investigations visible for this context.";
+  vis.forEach(i=>{ const d=el('div',i.id+" • "+i.hyp+" • "+i.client+" • "+i.verdict,'list-item'); box.appendChild(d); });
+}
+function renderTimeline(){
+  const ctx=document.getElementById('ctx').value;
+  const box=document.getElementById('tl'); box.innerHTML='';
+  SYNTH.activity.filter(a=> a.s==="GLOBAL" || a.c===ctx).forEach(a=>{
+    const d=el('div',null,'tl-i');
+    const dot=el('span',null,'tl-d');
+    const c=el('div'); c.textContent=a.t+"  "+a.a+"  "+a.s+"  "+(a.c||"")+"  "+a.d;
+    d.appendChild(dot); d.appendChild(c); box.appendChild(d);
+  });
+}
+function inspect(o){
+  const body=document.getElementById('ins-body'); body.innerHTML='';
+  const title=el('div',null,''); title.style.marginBottom=".75rem";
+  const k=el('div',null,'kv-k'); k.textContent=o.type.toUpperCase(); title.appendChild(k);
+  const v=el('div',o.id); v.style.fontSize="1rem"; v.style.fontWeight="600"; title.appendChild(v);
+  body.appendChild(title);
+  if(o.type==="hypothesis"){
+    const h=BY_ID[o.id];
+    [["Related TTPs",h.ttp.join(", ")],["Target client",h.client],["Required telemetry",h.tele],["Detection coverage",h.coverage],["Q3 Radar AQL (draft)",h.aql],["Confidence","MEDIUM (prototype)"],["Human review (per-client)","alpha: "+(h.latest||"PENDING")],["Hunt outcome","No execution — preview only"]].forEach(([a,b])=>{
+      const kv=el('div',null,''); const kk=el('div',a,'kv-k'); const vv=el('div',b,'kv-v'); kv.appendChild(kk); kv.appendChild(vv); body.appendChild(kv); body.appendChild(el('br'));
+    });
+    const b=el('button',"Open investigation drawer",'btn btn-primary btn-sm'); b.style.marginTop=".75rem";
+    b.addEventListener('click',()=>openDrawer('investigation'));
+    body.appendChild(b);
+  } else {
+    const a=EV_BY_ID[o.id];
+    [["Provenance",a.provenance],["Client",a.client],["Classification",a.classification],["Hash",a.hash],["Review",a.review]].forEach(([x,y])=>{
+      const kv=el('div',null,''); kv.appendChild(el('div',x,'kv-k')); kv.appendChild(el('div',y,'kv-v')); body.appendChild(kv); body.appendChild(el('br'));
+    });
+    const b=el('button',"Review (prototype)",'btn btn-primary btn-sm'); b.style.marginTop=".75rem";
+    b.addEventListener('click',()=>openDrawer('review'));
+    body.appendChild(b);
+  }
+}
+function openDrawer(kind){
+  const d=document.getElementById('drawer'), ov=document.getElementById('overlay');
+  document.getElementById('drawer-title').textContent="Drawer — "+kind;
+  const body=document.getElementById('drawer-body'); body.innerHTML='';
+  if(kind==="investigation"){
+    const p=el('p',"Create investigation — will POST /api/v1/cases/{id}/investigations in production. Prototype does not send it.",'text-muted');
+    body.appendChild(p);
+  } else if(kind==="review"){
+    ["APPROVED","REJECTED","NEEDS_MORE_DATA"].forEach(dec=>{
+      const l=el('label',null,'review-opt'); const inp=document.createElement('input'); inp.type='radio'; inp.name='dec'; inp.value=dec;
+      l.appendChild(inp); l.appendChild(document.createTextNode(" "+dec));
+      l.addEventListener('click',()=>{document.querySelectorAll('.review-opt').forEach(x=>x.classList.remove('selected')); l.classList.add('selected');});
+      body.appendChild(l); body.appendChild(el('br'));
+    });
+    const btn=el('button',"Submit review (prototype)",'btn btn-primary btn-sm'); btn.style.marginTop=".75rem";
+    body.appendChild(btn);
+  } else if(kind==="participants"){
+    ["analyst-alpha (OWNER)","reviewer (REVIEWER)"].forEach(p=>body.appendChild(el('div',p,'text-muted')));
+  } else if(kind==="lifecycle"){
+    body.textContent="OPEN → IN_PROGRESS/CLOSED; IN_PROGRESS → REVIEW/CLOSED; REVIEW → CLOSED/ARCHIVED (admin/review); ARCHIVED terminal.";
+  }
+  d.classList.add('open'); ov.classList.add('open');
+  document.getElementById('drawer-close').focus();
+}
+function closeDrawer(){ document.getElementById('drawer').classList.remove('open'); document.getElementById('overlay').classList.remove('open'); }
+document.addEventListener('DOMContentLoaded',()=>{
+  document.getElementById('state-loading').style.display='none';
+  document.getElementById('workspace').classList.remove('hidden');
+  renderOverview(); renderHyp(); renderEv(); renderNotes(); renderInv(); renderTimeline();
+  document.getElementById('ctx').addEventListener('change',()=>{ renderHyp(); renderEv(); renderNotes(); renderInv(); renderTimeline(); });
+  document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{
+    document.querySelectorAll('.tab').forEach(x=>{x.classList.remove('active'); x.setAttribute('aria-selected','false');});
+    t.classList.add('active'); t.setAttribute('aria-selected','true');
+    document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+    document.getElementById('tab-'+t.dataset.tab).classList.add('active');
+  }));
+  document.querySelectorAll('[data-open-drawer]').forEach(b=>b.addEventListener('click',()=>openDrawer(b.dataset.openDrawer)));
+  document.getElementById('overlay').addEventListener('click',closeDrawer);
+  document.getElementById('drawer-close').addEventListener('click',closeDrawer);
+  document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeDrawer(); });
+  document.getElementById('note-form').addEventListener('submit',e=>{
+    e.preventDefault();
+    const ta=document.getElementById('note-text'); const body=ta.value.trim(); if(!body) return;
+    const scope=document.getElementById('note-scope').value;
+    const ctx=document.getElementById('ctx').value;
+    const client = scope==="CLIENT" ? (ctx==="GLOBAL" ? "client-alpha" : ctx) : "";
+    if(scope==="GLOBAL" && (body.includes("client-alpha")||body.includes("client-beta"))){ alert("Prototype guard: GLOBAL note must not contain a client identifier."); return; }
+    SYNTH.notes.push({id:"n"+Date.now(), type:document.getElementById('note-type').value, scope, client, body, revisions:[{at:"now", by:"you (synthetic)"}]});
+    ta.value=''; renderNotes(); renderTimeline();
+  });
+  document.getElementById('link-btn').addEventListener('click',()=>{
+    const id=document.getElementById('link-select').value; if(!id) return;
+    if(!SYNTH.hypotheses.find(h=>h.id===id)) return;
+    const ctx=document.getElementById('ctx').value;
+    SYNTH.activity.unshift({t:"now", a:"hypothesis_linked", s:"CLIENT", c:ctx, d:id});
+    renderTimeline(); alert("Prototype: Link would POST /api/v1/cases/{id}/hypotheses/"+id);
+  });
+});
+</script>
+</body></html>

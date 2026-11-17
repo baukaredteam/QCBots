@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MSSP Intelligence Workbench - QRadar Fields</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0f172a; color: #e2e8f0; height: 100vh; overflow: hidden; }
+        .sidebar { width: 260px; background: #1e293b; height: 100vh; position: fixed; left: 0; top: 0; padding: 1.5rem 1rem; border-right: 1px solid #334155; overflow-y: auto; }
+        .sidebar h2 { font-size: 1.125rem; font-weight: 600; color: #f8fafc; margin-bottom: 1.5rem; }
+        .sidebar nav a { display: block; padding: 0.5rem 0.75rem; color: #94a3b8; text-decoration: none; border-radius: 0.375rem; margin-bottom: 0.25rem; font-size: 0.875rem; }
+        .sidebar nav a:hover { background: #334155; color: #f8fafc; }
+        .sidebar nav a.active { background: #3b82f6; color: #ffffff; }
+        .nav-group { margin-top: 1rem; margin-bottom: 0.25rem; color: #64748b; font-size: 0.6875rem; text-transform: uppercase; font-weight: 600; padding: 0 0.75rem; }
+        .main-content { margin-left: 260px; height: 100vh; overflow-y: auto; padding: 1.5rem; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+        .user-info { display: flex; align-items: center; gap: 0.75rem; }
+        .user-badge { background: #334155; padding: 0.25rem 0.5rem; border-radius: 0.375rem; font-size: 0.75rem; color: #cbd5e1; }
+        .btn-logout { background: transparent; border: 1px solid #475569; color: #cbd5e1; padding: 0.375rem 0.75rem; border-radius: 0.375rem; cursor: pointer; font-size: 0.875rem; }
+        .btn-logout:hover { background: #334155; border-color: #64748b; }
+        .card { background: #1e293b; border-radius: 0.5rem; padding: 1.5rem; margin-bottom: 1rem; border: 1px solid #334155; }
+        .card h3 { font-size: 1rem; font-weight: 600; color: #f8fafc; margin-bottom: 1rem; }
+        .filters { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1rem; align-items: center; }
+        .filters input, .filters select { background: #334155; border: 1px solid #475569; border-radius: 0.375rem; color: #f8fafc; padding: 0.5rem; font-size: 0.875rem; }
+        .filters input { min-width: 220px; }
+        .table-container { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; }
+        th { text-align: left; color: #94a3b8; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; padding: 0.75rem 0.5rem; border-bottom: 1px solid #334155; }
+        td { padding: 0.75rem 0.5rem; color: #cbd5e1; font-size: 0.875rem; border-bottom: 1px solid #334155; cursor: pointer; }
+        tr:hover { background: #334155; }
+        .badge { display: inline-block; padding: 0.125rem 0.5rem; border-radius: 9999px; font-size: 0.6875rem; font-weight: 500; }
+        .badge-available { background: #dcfce7; color: #166534; }
+        .badge-unavailable { background: #fee2e2; color: #991b1b; }
+        .empty-state { text-align: center; padding: 3rem 1rem; color: #94a3b8; }
+        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 1000; align-items: center; justify-content: center; }
+        .modal-overlay.open { display: flex; }
+        .modal { background: #1e293b; border: 1px solid #334155; border-radius: 0.75rem; max-width: 720px; width: 90%; max-height: 80vh; overflow-y: auto; padding: 1.5rem; }
+        .modal h3 { color: #f8fafc; margin-bottom: 1rem; }
+        .modal .close-btn { float: right; background: transparent; border: none; color: #94a3b8; font-size: 1.25rem; cursor: pointer; }
+        .modal .field-row { margin-bottom: 0.75rem; }
+        .modal .field-label { color: #94a3b8; font-size: 0.75rem; text-transform: uppercase; font-weight: 600; }
+        .modal .field-value { color: #cbd5e1; font-size: 0.875rem; margin-top: 0.125rem; word-break: break-word; }
+        .modal ul { margin-left: 1.25rem; color: #cbd5e1; font-size: 0.875rem; }
+        .loading { text-align: center; padding: 2rem; color: #94a3b8; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>MSSP Workbench</h2>
+        <nav>
+            <a href="dashboard.html">Dashboard</a>
+            <div class="nav-group">QRadar Inventory</div>
+            <a href="qradar-rules.html">Detection Rules</a>
+            <a href="qradar-building-blocks.html">Building Blocks</a>
+            <a href="qradar-fields.html" class="active">Custom Fields</a>
+            <a href="qradar-import.html">Import</a>
+        </nav>
+    </div>
+    <div class="main-content">
+        <div class="header">
+            <div class="user-info">
+                <div class="user-badge" id="userBadge"></div>
+                <span id="userName" style="color: #cbd5e1; font-size: 0.875rem;"></span>
+            </div>
+            <button class="btn-logout" onclick="logout()">Logout</button>
+        </div>
+        <div class="card">
+            <h3>QRadar Custom Fields</h3>
+            <div class="filters">
+                <input type="text" id="searchBox" placeholder="Search fields..." oninput="applyFilters()">
+                <select id="availabilityFilter" onchange="applyFilters()">
+                    <option value="">All Availability</option>
+                    <option value="available">Available</option>
+                    <option value="unavailable">Unavailable</option>
+                </select>
+                <select id="logSourceFilter" onchange="applyFilters()">
+                    <option value="">All Log Sources</option>
+                </select>
+                <select id="adversaryFilter" onchange="applyFilters()">
+                    <option value="">All Adversary Control</option>
+                    <option value="yes">Yes</option>
+                    <option value="no">No</option>
+                </select>
+            </div>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Field Name</th>
+                            <th>Display Name</th>
+                            <th>Data Type</th>
+                            <th>Log Source</th>
+                            <th>Availability</th>
+                            <th>Adversary Control</th>
+                        </tr>
+                    </thead>
+                    <tbody id="fieldsTableBody">
+                        <tr><td colspan="6" class="loading">Loading...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+        <div class="modal" onclick="event.stopPropagation()">
+            <button class="close-btn" onclick="closeModal()">&times;</button>
+            <h3 id="modalTitle">Field Details</h3>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = ""; // same-origin
+        const sessionId = sessionStorage.getItem('sessionId');
+        if (!sessionId) { window.location.href = 'login.html'; }
+        document.getElementById('userName').textContent = sessionStorage.getItem('userId') || '';
+        document.getElementById('userBadge').textContent = sessionStorage.getItem('userRole') || '';
+
+        let allFields = [];
+
+        async function loadAPI(endpoint) {
+            const response = await fetch(`${API_BASE}${endpoint}`, {
+                headers: { 'Cookie': `session_id=${sessionId}`, 'Origin': window.location.origin }
+            });
+            if (response.status === 401) { sessionStorage.clear(); window.location.href = 'login.html'; return null; }
+            if (!response.ok) return null;
+            return await response.json();
+        }
+
+        async function loadFields() {
+            const data = await loadAPI('/api/v1/inventory/fields');
+            const tbody = document.getElementById('fieldsTableBody');
+            tbody.innerHTML = '';
+            if (!data || !data.fields) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:#94a3b8;">No fields found.</td></tr>';
+                return;
+            }
+            allFields = data.fields.map(f => ({
+                field_name: f.field_name,
+                display_name: f.field_description || f.normalized_name || f.field_name,
+                data_type: f.field_type,
+                log_source: f.source_type || '-',
+                availability: f.is_active ? 'Available' : 'Unavailable',
+                adversary_control: '-',
+                _raw: f
+            }));
+
+            const lsSet = new Set(allFields.map(f => f.log_source).filter(v => v && v !== '-'));
+            const lsFilter = document.getElementById('logSourceFilter');
+            lsSet.forEach(v => { const opt = document.createElement('option'); opt.value = v; opt.textContent = v; lsFilter.appendChild(opt); });
+
+            applyFilters();
+        }
+
+        function applyFilters() {
+            const search = document.getElementById('searchBox').value.toLowerCase();
+            const avail = document.getElementById('availabilityFilter').value.toLowerCase();
+            const ls = document.getElementById('logSourceFilter').value.toLowerCase();
+            const adv = document.getElementById('adversaryFilter').value.toLowerCase();
+            const tbody = document.getElementById('fieldsTableBody');
+            tbody.innerHTML = '';
+
+            const filtered = allFields.filter(f => {
+                const text = `${f.field_name} ${f.display_name}`.toLowerCase();
+                if (search && !text.includes(search)) return false;
+                if (avail && f.availability.toLowerCase() !== avail) return false;
+                if (ls && f.log_source.toLowerCase() !== ls) return false;
+                if (adv) {
+                    // adversary_control data not available; treat as 'no'
+                    if (adv === 'yes') return false;
+                }
+                return true;
+            });
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:#94a3b8;">No fields match filters.</td></tr>';
+                return;
+            }
+            filtered.forEach(f => {
+                const row = document.createElement('tr');
+                const availClass = f.availability === 'Available' ? 'available' : 'unavailable';
+                row.innerHTML = `
+                    <td><code>${f.field_name}</code></td>
+                    <td>${f.display_name}</td>
+                    <td>${f.data_type}</td>
+                    <td>${f.log_source}</td>
+                    <td><span class="badge badge-${availClass}">${f.availability}</span></td>
+                    <td>${f.adversary_control}</td>
+                `;
+                row.addEventListener('click', () => showFieldModal(f));
+                tbody.appendChild(row);
+            });
+        }
+
+        function showFieldModal(f) {
+            const r = f._raw;
+            document.getElementById('modalTitle').textContent = f.field_name || 'Field Details';
+            const body = document.getElementById('modalBody');
+            const aliases = (r.aliases || '').split(',').map(s=>s.trim()).filter(Boolean);
+            const usedIn = (r.aliases || '').split(',').map(s=>s.trim()).filter(Boolean);
+            body.innerHTML = `
+                <div class="field-row"><div class="field-label">Field Name</div><div class="field-value"><code>${f.field_name}</code></div></div>
+                <div class="field-row"><div class="field-label">Display Name</div><div class="field-value">${f.display_name}</div></div>
+                <div class="field-row"><div class="field-label">Data Type</div><div class="field-value">${f.data_type}</div></div>
+                <div class="field-row"><div class="field-label">Log Source</div><div class="field-value">${f.log_source}</div></div>
+                <div class="field-row"><div class="field-label">Availability</div><div class="field-value">${f.availability}</div></div>
+                <div class="field-row"><div class="field-label">Adversary Control</div><div class="field-value">${f.adversary_control}</div></div>
+                <div class="field-row"><div class="field-label">Notes</div><div class="field-value">${r.field_description || '-'}</div></div>
+                <div class="field-row"><div class="field-label">Used In Events</div><ul>${aliases.length ? aliases.map(a=>`<li>${escapeHtml(a)}</li>`).join('') : '<li>-</li>'}</ul></div>
+                <div class="field-row"><div class="field-label">Aliases</div><ul>${usedIn.length ? usedIn.map(a=>`<li>${escapeHtml(a)}</li>`).join('') : '<li>-</li>'}</ul></div>
+            `;
+            document.getElementById('modalOverlay').classList.add('open');
+        }
+
+        function closeModal(e) {
+            if (e && e.target && e.target.id !== 'modalOverlay') return;
+            document.getElementById('modalOverlay').classList.remove('open');
+        }
+
+        function escapeHtml(s) { return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+        async function logout() {
+            await fetch(`${API_BASE}/api/v1/auth/logout`, { method: 'POST', headers: { 'Cookie': `session_id=${sessionId}`, 'Origin': window.location.origin } });
+            sessionStorage.clear(); window.location.href = 'login.html';
+        }
+
+        loadFields();
+    </script>
+</body>
+</html>

@@ -1,0 +1,66 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sentinel Atlas v2 — Analyst Home (prototype)</title>
+<link rel="stylesheet" href="v2.css">
+</head><body>
+<div class="shell">
+  <aside class="sb">
+    <div class="sb-brand"><div class="logo">SA</div><div><div class="sb-title">Sentinel Atlas</div><div class="sb-sub">Hybrid CTI + SOC Workbench</div></div></div>
+    <nav class="sb-nav" aria-label="Primary">
+      <div class="sb-group">Home</div>
+      <a class="active">Analyst Home</a><a>My Work</a><a>Review Queue</a>
+      <div class="sb-group">Intelligence</div>
+      <a>CTI Feed <span class="tag tag-gap">Prototype</span></a>
+      <a href="research-cases-explorer.html">Research Cases</a>
+      <div class="sb-group">Threat Hunting</div>
+      <a>Hypothesis Lab <span class="tag tag-gap">Prototype</span></a>
+      <div class="sb-group">Detection</div>
+      <a>QRadar Rules</a><a>Building Blocks</a>
+    </nav>
+    <div class="sb-foot"><div class="text-sm text-muted">Prototype — synthetic data only</div><div class="text-sm text-muted">Production UI remains functional.</div></div>
+  </aside>
+  <main class="main">
+    <header class="top"><div class="crumb">Home / <strong>Analyst Home</strong></div><div class="top-right"><span class="chip">Global Research</span><span class="chip">analyst-alpha • CTI_ANALYST</span></div></header>
+    <section class="grid g">
+      <article class="card">
+        <div class="card-h">My active Research Cases <span class="badge b-open">2 active</span></div>
+        <div class="card-b">
+          <div class="row"><code>case-8f3a</code><span>Suspicious PowerShell Activity</span><span class="badge b-open">OPEN</span></div>
+          <div class="row"><code>case-2b9c</code><span>Lazarus IOC Correlation</span><span class="badge b-prog">IN_PROGRESS</span></div>
+          <p class="text-sm text-muted">Source: <code>GET /api/v1/cases</code> — EXISTS</p>
+        </div>
+      </article>
+      <article class="card">
+        <div class="card-h">New CTI reports <span class="tag tag-gap">BACKEND-GAP</span></div>
+        <div class="card-b"><p class="text-muted">CTI feed endpoint does not exist yet. This panel is a design preview only; no fake reports are shown.</p>
+        <button class="btn btn-secondary" disabled>Open report (M7)</button></div>
+      </article>
+      <article class="card">
+        <div class="card-h">Pending reviews</div>
+        <div class="card-b">
+          <div class="row"><span>Artifact art-5590</span><span class="badge b-review">PENDING</span></div>
+          <p class="text-sm text-muted">Source: per-case artifact review state — EXISTS (per case; no global queue endpoint)</p>
+        </div>
+      </article>
+      <article class="card">
+        <div class="card-h">Recent activity</div>
+        <div class="card-b" id="act">Loading…</div>
+      </article>
+    </section>
+    <section class="card" style="margin-top:1rem">
+      <div class="card-h">Quick actions</div>
+      <div class="card-b" style="display:flex;gap:.5rem;flex-wrap:wrap">
+        <a class="btn btn-primary" href="research-cases-explorer.html">+ New Case</a>
+        <a class="btn btn-secondary" href="research-case-workspace.html">Open workspace</a>
+        <span class="tag tag-gap">Hypothesis Lab — prototype</span>
+      </div>
+    </section>
+  </main>
+  <aside class="inspector"><div class="ins-h">Inspector</div><div class="ins-b">
+    <p class="text-muted text-sm">Selected object provenance, client relevance and review info will appear here. No client data is pre-fetched.</p>
+    <p class="text-sm">Global Research ≠ universal CLIENT permission.</p>
+  </div></aside>
+</div>
+<script>
+(function(){ const el=document.getElementById('act'); el.innerHTML='<p class="text-muted text-sm">Recent activity loads from <code>GET /api/v1/cases/{id}/activity</code> in production. In this prototype the activity feed is intentionally empty to avoid inventing events.</p>'; })();
+</script>
+</body></html>

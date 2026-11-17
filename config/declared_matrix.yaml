@@ -1,0 +1,35 @@
+# Declared Detection Coverage Matrix
+# Maps MITRE techniques to QRadar rules and coverage status
+# Status: NOT VERIFIED - to be populated after QRadar inventory import
+
+coverage:
+  - mitre_technique: "T1059.001"
+    mitre_technique_name: "PowerShell"
+    mitre_tactic: "execution"
+    existing_rules: ["rule-001"]
+    required_fields: ["username", "process_name", "command_line", "source_ip"]
+    required_log_sources: ["Windows Event Log", "Sysmon"]
+    coverage_status: "UNKNOWN"
+    evidence: []
+
+  - mitre_technique: "T1021.002"
+    mitre_technique_name: "SMB/Windows Admin Shares"
+    mitre_tactic: "lateral_movement"
+    existing_rules: ["rule-002"]
+    required_fields: ["source_ip", "destination_ip", "share_name", "username"]
+    required_log_sources: ["Windows Event Log", "Firewall Log"]
+    coverage_status: "UNKNOWN"
+    evidence: []
+
+  - mitre_technique: "T1003"
+    mitre_technique_name: "OS Credential Dumping"
+    mitre_tactic: "credential_access"
+    existing_rules: ["rule-003"]
+    required_fields: ["process_name", "target_process", "access_rights", "source_ip"]
+    required_log_sources: ["Sysmon", "EDR Agent"]
+    coverage_status: "UNKNOWN"
+    evidence: []
+
+# Coverage states: COVERED / PARTIAL / NOT_COVERED / UNKNOWN
+# Rule existence is NOT proof of effective detection
+# Distinguish: Rule Exists / Required Fields Available / Telemetry Available / Rule Tested / Detection Observed

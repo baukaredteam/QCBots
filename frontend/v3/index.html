@@ -1,0 +1,62 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sentinel Atlas — Application Shell v3 (V3-F1 + V3-F2 + V3-F3)</title>
+<link rel="stylesheet" href="design-tokens.css">
+<style>
+.v3layout{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:17px;align-items:start}
+.v3inspector{position:sticky;top:100px}
+.statebox{border:1px dashed var(--line);border-radius:var(--radius);padding:34px;text-align:center;color:var(--muted)}
+.demo-banner{background:#123038;border:1px solid #1e5c52;border-radius:10px;padding:10px 14px;margin-bottom:18px;color:#a7e8d7;font-size:12px;display:flex;justify-content:space-between;gap:12px}
+.demo-banner b{letter-spacing:.08em}
+.filterbar{display:flex;gap:.75rem;flex-wrap:wrap;align-items:center;padding:12px 14px;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);margin-bottom:14px}
+.filterbar input,.filterbar select{background:#0c1624;border:1px solid var(--line);border-radius:8px;color:var(--text);padding:9px 11px}
+.tablewrap{overflow-x:auto;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius)}
+table{width:100%;border-collapse:collapse}th{text-align:left;font-size:11px;text-transform:uppercase;color:var(--muted);padding:12px 14px;border-bottom:1px solid var(--line)}td{padding:12px 14px;border-bottom:1px solid var(--line);color:var(--soft);font-size:13px}tr:hover td{background:var(--panel2)}
+.pager{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;color:var(--muted);font-size:12px}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:420px;max-width:92vw;background:var(--panel);border-left:1px solid var(--line);z-index:1000;padding:20px;overflow-y:auto;transform:translateX(105%);transition:transform .25s}
+.drawer.open{transform:none}.overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:990;display:none}.overlay.open{display:block}
+.flow{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:18px}
+.flow div{border:1px solid var(--line);border-radius:10px;padding:12px;background:var(--panel2)}.flow b{display:block;font-size:12px}.flow span{color:var(--muted);font-size:11px}
+.tabs{display:flex;gap:0;border-bottom:1px solid var(--line);margin-bottom:16px;overflow-x:auto}.tab{padding:10px 14px;border:0;background:transparent;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap}.tab.active{color:var(--mint);border-bottom-color:var(--mint)}
+.sel-row{display:grid;grid-template-columns:1fr;padding:12px;border:1px solid var(--line);border-radius:8px;background:var(--bg);cursor:pointer;text-align:left;color:var(--soft);width:100%;margin-bottom:8px}
+.sel-row.sel{border-color:var(--mint);background:#123038}
+.kv{display:flex;flex-direction:column;gap:2px}.kv-k{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}.kv-v{font-size:13px;color:var(--soft)}
+.tl{display:flex;flex-direction:column;gap:8px}.tl-i{display:flex;gap:10px;padding:6px 0;border-bottom:1px solid var(--line);font-size:12px;color:var(--soft)}
+.note{border:1px solid var(--line);border-radius:8px;padding:12px;margin-bottom:10px;background:var(--bg)}
+.hist{display:flex;justify-content:space-between;border-bottom:1px solid var(--line);padding:6px 0;font-size:12px;color:var(--soft)}
+.home-case{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.home-case-main{flex:1;min-width:0}
+.home-case-title{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.home-case-badges{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.home-case-meta{font-size:11px;margin-top:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.home-case-open{flex:none}
+@media(max-width:800px){.home-case{align-items:flex-start}.home-case-open{margin-top:2px}}
+.hwcols{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+@media(max-width:1100px){.hwcols{grid-template-columns:1fr}}
+</style>
+</head><body>
+<div class="shell">
+<aside class="sidebar" aria-label="Primary">
+  <div class="brand"><div class="brandicon">SA</div><div class="brandmeta"><div class="brandname">Sentinel Atlas</div><div class="brandsub">INTELLIGENCE OPERATIONS</div></div></div>
+  <nav class="navarea" id="nav" aria-label="Workspace"></nav>
+  <div class="userbox"><div class="avatar" id="avatar">?</div><div class="usermeta"><b id="user-name">Loading…</b><div id="user-role" style="font-size:11px;color:var(--muted)">—</div></div></div>
+</aside>
+<div class="app">
+  <div class="topbar">
+    <div class="crumb">WORKSPACE / <strong id="crumb">Analyst Home</strong></div>
+    <input class="search" id="global-search" placeholder="Search within this workspace…" aria-label="Search">
+    <div class="topright">
+      <select id="tenant" class="context" aria-label="Client context">
+        <option value="global">◈ Global Research (metadata only)</option>
+      </select>
+      <button class="topicon" aria-label="Notifications" id="bell">♧</button>
+    </div>
+  </div>
+  <div class="demo-banner"><div><b>V3 SHELL</b> <span>— Real APIs via cookie-session; environment not verified in UI (no server environment marker).</span></div><span class="badge mint">HYBRID · CTI + SOC</span></div>
+  <main class="content" id="content" tabindex="-1"></main>
+</div>
+</div>
+<div id="drawer-root"></div>
+<script src="../api.js"></script>
+<script src="hunt-workspace.js"></script>`n<script src="inventory-workspace.js"></script>
+<script src="v3.js"></script>
+</body></html>

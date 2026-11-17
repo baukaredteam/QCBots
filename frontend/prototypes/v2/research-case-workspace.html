@@ -1,0 +1,31 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Case Workspace — v2 prototype</title><link rel="stylesheet" href="v2.css"></head><body>
+<div class="shell"><aside class="sb"><div class="sb-brand"><div class="logo">SA</div><div><div class="sb-title">Sentinel Atlas</div></div></div><nav class="sb-nav"><a href="research-cases-explorer.html">← Cases</a><div class="sb-group">Workspace</div><a class="active">Overview</a><a>Hypotheses</a><a>Evidence</a><a>Investigations</a><a>Notes</a><a>Timeline</a></nav><div class="sb-foot"><div class="text-sm text-muted">Lifecycle/participants via existing M6 APIs.</div></div></aside>
+<main class="main"><header class="top"><div class="crumb">Research Cases / <strong>case-8f3a</strong></div><div class="top-right"><span class="chip">client-alpha</span><span class="badge b-open">OPEN</span></div></header>
+<div style="margin-top:1rem">
+<div class="card"><div class="card-h">Suspicious PowerShell Activity <span class="badge b-open">OPEN</span><span class="badge b-review">P1</span></div><div class="card-b">
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1rem">
+<div class="kv"><span class="kv-k">Owner</span><span class="kv-v">analyst-alpha</span></div><div class="kv"><span class="kv-k">Created</span><span class="kv-v">2026-11-05</span></div><div class="kv"><span class="kv-k">Updated</span><span class="kv-v">2h ago</span></div><div class="kv"><span class="kv-k">Scope</span><span class="kv-v">GLOBAL metadata; CLIENT content by grant</span></div></div>
+<p style="margin-top:1rem" class="text-muted">Description: encoded PowerShell, WMI lateral movement, credential dumping — synthetic v2 summary.</p>
+<div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-top:1rem"><button class="btn btn-secondary">Change Status</button><button class="btn btn-secondary">Participants</button><button class="btn btn-secondary">Link Hypothesis</button></div>
+</div></div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1rem">
+<div class="card"><div class="card-h">Hypotheses (linked)</div><div class="card-b"><div class="row"><code>hyp-1122</code><span>APT29 SCADA via PowerShell</span><span class="badge b-review">REVIEW</span></div><p class="text-sm text-muted">Per-client review: alpha APPROVED, beta PENDING — EXHIBITS per-client results (append-only, EXISTING).</p></div></div>
+<div class="card"><div class="card-h">Evidence</div><div class="card-b"><div class="ev-card"><div class="ev-h"><span>art-4421</span><span class="badge b-review">REVIEW</span></div><div class="ev-b"><div class="ev-f"><span class="ev-l">Source</span><span>octop scan (provenance, no invented scan)</span></div><div class="ev-f"><span class="ev-l">Classification</span><span><code>CONFIDENTIAL</code></span></div></div></div></div></div>
+<div class="card"><div class="card-h">Investigations</div><div class="card-b"><p class="text-muted">No investigations linked yet. Create Investigation uses POST …/investigations (EXISTING).</p></div></div>
+<div class="card"><div class="card-h">Notes</div><div class="card-b"><p class="text-muted">GLOBAL/CLIENT scope; revision history append-only (EXISTING). No fake notes.</p></div></div>
+<div class="card"><div class="card-h">Timeline</div><div class="card-b timeline"><div class="timeline-item"><span>●</span><span>hypothesis_linked (CLIENT)</span></div><div class="timeline-item"><span>●</span><span>note_added (CLIENT)</span></div></div></div>
+<div class="card"><div class="card-h">Client Relevance</div><div class="card-b"><p class="text-muted">Where available: primary_client context + artifact client chips. Full assessment — BACKEND-GAP (no assessment store).</p></div></div>
+</div></div></main>
+<aside class="inspector"><div class="ins-h">Context Inspector</div><div class="ins-b">
+<p class="text-sm"><strong>Selected:</strong> art-4421</p>
+<div class="kv"><span class="kv-k">Provenance</span><span class="kv-v">report-alpha-1</span></div>
+<div class="kv"><span class="kv-k">Client</span><span class="kv-v">client-alpha (grant required)</span></div>
+<div class="kv"><span class="kv-k">Review</span><span class="kv-v">PENDING — reviewer: CanReviewArtifact</span></div>
+<div class="kv"><span class="kv-k">Classification</span><span class="kv-v">CONFIDENTIAL</span></div>
+<hr style="border:none;border-top:1px solid var(--line);margin:1rem 0">
+<div class="review-opt selected"><input type="radio" name="r" checked> APPROVED</div>
+<div class="review-opt"><input type="radio" name="r"> REJECTED</div>
+<div class="review-opt"><input type="radio" name="r"> NEEDS_MORE_DATA</div>
+<button class="btn btn-primary" style="width:100%;margin-top:.75rem">Submit review</button>
+</div></aside>
+</div></body></html>

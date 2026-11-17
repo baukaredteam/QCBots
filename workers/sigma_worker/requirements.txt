@@ -1,0 +1,26 @@
+# Sentinel Atlas Sigma worker — pinned dependencies (Phase 2B-3)
+#
+# Verified 2026-11-11 in an isolated Python 3.13 venv.
+#
+# Verified working set (see Gate 2 report §3):
+#   pysigma==0.11.23
+#   pysigma-backend-qradar-aql==0.3.2   (bundles pySigma_QRadar_base)
+#   regex==2026.11.9
+#
+# Known dependency conflict, reported rather than hidden:
+#   the IBM backend declares regex>=2023.12.25,<2024.0.0.
+#   On Python 3.13/3.14 no wheel exists for regex<2024 and it fails to build
+#   (needs a Rust toolchain), so an exactly IBM-pinned resolution is not
+#   installable on this host. The set above runs and is exercised by tests; the
+#   divergence is limited to the regex version and is tracked as a blocked item.
+#
+# IBM support ranges: python ^3.10, pysigma >=0.9.8,<0.12.0.
+# Never upgrade outside the IBM range.
+pysigma==0.11.23
+pysigma-backend-qradar-aql==0.3.2
+regex==2026.11.9
+# Transitive security floors declared by the IBM packages.
+requests>=2.33.0
+urllib3>=2.8.0
+certifi>=2026.10.18
+idna>=3.15

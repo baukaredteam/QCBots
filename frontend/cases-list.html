@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sentinel Atlas — Research Cases</title>
+<link rel="stylesheet" href="cases.css">
+</head>
+<body>
+<div class="app-shell">
+<header class="topbar">
+  <div class="topbar-left"><a href="cases-list.html" class="logo"><div class="logo-icon">SA</div><span>Sentinel Atlas</span></a>
+  <div class="search-bar"><input id="search" type="text" placeholder="Search cases by ID or title..."></div></div>
+  <div class="topbar-right"><div class="user-menu"><div class="user-avatar" id="avatar">?</div><span id="user-name">Loading…</span></div></div>
+</header>
+<aside class="sidebar">
+  <div class="sidebar-brand"><div class="brand-title">MSSP Intelligence Workbench</div><div class="text-muted text-sm mt-1">On-premise CTI Platform</div></div>
+  <nav class="sidebar-nav">
+    <div class="nav-group-title">Navigation</div>
+    <a href="cases-list.html" class="nav-item active"><span class="nav-icon">📁</span><span>Research Cases</span></a>
+  </nav>
+  <div class="sidebar-foot">
+    <div class="text-muted text-sm" id="client-info">Client: —</div>
+    <div class="text-muted text-sm" id="role-info">Role: —</div>
+    <button id="logout-btn" class="btn btn-danger btn-sm w-full">Logout</button>
+  </div>
+</aside>
+<main class="main">
+  <div class="page-header">
+    <h1 class="page-title">Research Cases</h1>
+    <p class="page-subtitle">Cases you are authorized for. Visibility is enforced server-side.</p>
+    <div class="page-actions"><button id="new-case-btn" class="btn btn-primary">+ New Case</button></div>
+  </div>
+  <div id="state-loading" class="loading-state"><div class="spinner"></div><div>Loading cases…</div></div>
+  <div id="state-error" class="error-state hidden"><div class="error-title">Error</div><div class="error-msg" id="error-msg"></div><button class="btn btn-secondary" id="retry-btn">Retry</button></div>
+  <div id="state-forbidden" class="access-denied-state hidden"><div class="access-icon">🔒</div><div class="access-title">Access Denied</div><div class="access-subtitle">Session expired or forbidden. Please sign in again.</div><a class="btn btn-secondary mt-3" href="login.html">Go to Login</a></div>
+  <div id="state-empty" class="empty-state hidden"><div class="empty-icon">📭</div><div class="empty-title">No cases</div><div class="empty-subtitle">No research cases match current filters.</div></div>
+
+  <div id="list-view">
+  <div class="filters-toolbar">
+    <div class="filter-group"><span class="filter-label">Search</span><input id="f-search" class="filter-input" type="text" placeholder="Case ID, title..."></div>
+    <div class="filter-group"><span class="filter-label">Status</span><select id="f-status" class="filter-select"><option value="">All</option><option value="OPEN">OPEN</option><option value="IN_PROGRESS">IN_PROGRESS</option><option value="REVIEW">REVIEW</option><option value="CLOSED">CLOSED</option><option value="ARCHIVED">ARCHIVED</option></select></div>
+    <div class="filter-group"><span class="filter-label">Priority</span><select id="f-priority" class="filter-select"><option value="">All</option><option value="P1">P1</option><option value="P2">P2</option><option value="P3">P3</option><option value="P4">P4</option></select></div>
+    <div class="filter-group"><span class="filter-label">Client</span><select id="f-client" class="filter-select"></select></div>
+    <a href="#" id="clear-filters" class="clear-filters">Clear filters</a>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="card-title">Cases</span><span class="text-muted text-sm" id="count-badge"></span></div>
+    <div class="table-wrap"><table><thead><tr><th>#</th><th>Case ID</th><th>Title</th><th>Status</th><th>Priority</th><th>Updated</th><th>Actions</th></tr></thead><tbody id="cases-tbody"></tbody></table></div>
+    <div class="pagination"><div class="pagination-info" id="pagination-info"></div><div class="pagination-btns"><button id="prev-btn" class="pagination-btn">&lt; Prev</button><button id="next-btn" class="pagination-btn">Next &gt;</button></div></div>
+  </div>
+  </div>
+</main>
+</div>
+
+<div class="modal-overlay" id="create-modal">
+  <div class="modal">
+    <div class="modal-header"><div class="modal-title">Create Research Case</div><button class="modal-close" id="close-modal-btn" type="button">&times;</button></div>
+    <form id="create-form">
+      <div class="modal-body">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+          <div><div class="filter-label">Title *</div><input id="c-title" class="filter-input" type="text" required></div>
+          <div><div class="filter-label">Priority</div><select id="c-priority" class="filter-select"><option value="P2">P2</option><option value="P1">P1</option><option value="P3">P3</option><option value="P4">P4</option></select></div>
+          <div style="grid-column:1/-1;"><div class="filter-label">Description</div><textarea id="c-desc" class="filter-input" rows="3"></textarea></div>
+          <div><div class="filter-label">Initial Client *</div><select id="c-client" class="filter-select"></select><div class="text-muted text-sm mt-1">Only clients you are authorized for.</div></div>
+          <div><div class="filter-label">Severity</div><select id="c-severity" class="filter-select"><option value="HIGH">HIGH</option><option value="CRITICAL">CRITICAL</option><option value="MEDIUM">MEDIUM</option><option value="LOW">LOW</option></select></div>
+          <div style="grid-column:1/-1;"><div class="filter-label">Idempotency Key (auto-generated, stable on retry)</div><input id="c-idem" class="filter-input" readonly></div>
+        </div>
+        <div id="create-error" class="error-msg" style="color:var(--danger);margin-top:.75rem;"></div>
+      </div>
+      <div class="modal-footer"><button type="button" class="btn btn-secondary" id="cancel-create">Cancel</button><button type="submit" class="btn btn-primary">Create Case</button></div>
+    </form>
+  </div>
+</div>
+
+<script src="api.js"></script>
+<script src="cases-list.js"></script>
+</body>
+</html>
