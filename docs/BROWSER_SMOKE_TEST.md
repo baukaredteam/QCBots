@@ -24,7 +24,7 @@ The mounted Browser has no argument for a CLI session name. The generated name w
 | --- | --- | --- |
 | `agent_browser_open({url:"http://127.0.0.1:4174/v3/index.html"})` | Title: `Sentinel Atlas — Application Shell v3 (V3-F1 + V3-F2 + V3-F3)`. Interactive snapshot returned automatically. | N/A |
 | Automatic interactive snapshot from open | `e1` navigation Workspace; `e2` textbox Search; `e3` combobox Client context; `e6` selected option Global Research (metadata only); `e4` Notifications; `e5` Go to Login. | N/A |
-| `agent_browser_snapshot({depth:6})` | Same six refs; no Open research cases control. | N/A |
+| `agent_browser_snapshot({depth:6})` (previous 4173 run only) | On 4174 the automatic snapshot supplied current refs; no redundant snapshot was requested. | N/A |
 | `agent_browser_screenshot({fullPage:true,format:"png"})` | Saved screenshot, copied unchanged to `docs/browser-smoke/v3-session-blocked.png`. | N/A |
 | `agent_browser_get_text({selector:"body"})` | See exact relevant observed text below. | N/A |
 | `agent_browser_eval({script:<DOM predicates>})` | Four navigation controls absent; three panels absent; Open research cases button absent; session blocker present. Predicate source and result in `browser-smoke/assertions.json`. | N/A |
@@ -87,3 +87,5 @@ ARTIFACTS: This report, screenshot, predicate source/results and hashes.
 DECISIONS: Do not treat this as a product regression or release pass. No merge/deploy.
 OPEN: Working backend session, full console capture and requested CLI session isolation.
 NEXT: Re-run against an environment serving frontend assets and a disposable authenticated backend; click the observed Open research cases ref and verify the changed view.
+
+Fresh screenshot captured at 16:22 UTC as screenshot-1794932542333.png and copied over the tracked PNG. Its bytes are identical to the earlier image because the rendered blocked shell is unchanged; it is a fresh capture, not a new visual state. SHA-256 values were recomputed after the retest. Predicate JSON is saved as UTF-8/LF so its published bytes match the recorded hash.
