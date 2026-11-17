@@ -62,6 +62,13 @@ class ImportValidationTests(unittest.TestCase):
         fields["metadata"]["total_fields"] = 3
         self.assertIn("DUPLICATE_FIELD_KEY", self.codes(self.run_validation()))
 
+    def test_invalid_counter_remains_machine_readable(self):
+        import datetime
+        self.docs["fields.yaml"]["metadata"]["total_fields"] = datetime.date(2026, 7, 11)
+        result = self.run_validation()
+        self.assertEqual(result["verdict"], "REJECT")
+        json.dumps(result)
+
     def test_log_source_order_does_not_hide_duplicate(self):
         fields = self.docs["fields.yaml"]
         fields["custom_fields"] = [{"name": "x", "log_sources": sources} for sources in (["a", "b"], ["b", "a"])]

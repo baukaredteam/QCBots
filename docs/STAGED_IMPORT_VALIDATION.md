@@ -1,6 +1,6 @@
 # Staged QRadar validation (SPEC 11)
 
-Requirements: Python 3.9+ and PyYAML. No Go, CGO, or new Python dependencies.
+Requirements: Python 3.10+ and PyYAML. No Go, CGO, or new Python dependencies.
 From the repository root:
 
 ```sh

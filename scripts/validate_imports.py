@@ -59,6 +59,8 @@ def validate(repo, staged):
         if not isinstance(metadata, dict):
             raise ValueError(f"{filename}: metadata must be a mapping")
         declared = metadata.get(key)
+        if declared is not None and type(declared) is not int:
+            declared = str(declared)
         counts[key] = {"declared": declared, "actual": actual}
         if type(declared) is not int or declared != actual:
             error("COUNT_MISMATCH", file=filename, counter=key, declared=declared, actual=actual)
