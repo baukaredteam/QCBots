@@ -1,0 +1,2 @@
+376:  const tabDefs = [['events', 'Event Catalog'], ['fields', 'Field Registry'], ['imports', 'Auto Import'], ['mappings', 'Mapping Inspector'], ['readiness', 'Hunt Readiness'], ['threat-links', 'Threat Intel Links']];
+407:    if (fieldCtl.tab === 'threat-links') {

@@ -1,0 +1,2 @@
+376:  const tabDefs = [['events', 'Event Catalog'], ['fields', 'Field Registry'], ['imports', 'Auto Import'], ['mappings', 'Mapping Inspector'], ['readiness', 'Hunt Readiness'], ['threat-links', 'Threat Intel Links']];
+411:      listHost.appendChild(escEl('div', 'Threat Intel Links · DESIGN ONLY', 'paneltitle'));
