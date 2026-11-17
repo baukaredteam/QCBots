@@ -60,7 +60,7 @@ No fabricated endpoints, no unverified compatibility claims, no external system 
 | Claude Code | Local CLI | NOT INSTALLED | No installation found |
 | Codex | Local CLI | NOT INSTALLED | No installation found |
 | DeepSeek Harness | External API | NOT VERIFIED | External network not approved by default |
-| ThreadLinqs MCP | MCP transport | NOT VERIFIED | Subject to company security policy; default deny outbound |
+| ThreadLinqs MCP | MCP transport | TECHNICAL PoC = PASS; SECURITY POLICY APPROVAL = PENDING | Catalog/health only, per Chief CTI report 2026-11-17; target tool schemas, per-call costs and end-to-end ingestion NOT VERIFIED; default deny outbound |
 | Local LLM | Local inference | NOT CONFIGURED | No model selected or installed |
 
 ---
@@ -75,10 +75,18 @@ No fabricated endpoints, no unverified compatibility claims, no external system 
 | Claude Code | Not installed | N/A | N/A | Configured, disabled | NOT VERIFIED |
 | Codex | Not installed | N/A | N/A | Configured, disabled | NOT VERIFIED |
 | DeepSeek | Not reachable | N/A | N/A | N/A | NOT VERIFIED |
-| ThreadLinqs MCP | Not reachable | N/A | N/A | N/A | NOT VERIFIED |
+| ThreadLinqs MCP | PASS: health status=ok, API reachable | Purple tier 3 (reported) | Ingestion not tested | N/A | TECHNICAL PoC = PASS; SECURITY POLICY APPROVAL = PENDING |
 | Local LLM | Not configured | N/A | N/A | N/A | NOT VERIFIED |
 
 ---
+
+ThreadLinqs evidence source: Chief CTI report dated 2026-11-17: live MCP
+`get_started` returned 81 tools, 25 prompts, server 8.2.0; `health` returned
+status=ok / API reachable. These calls were not repeated for this documentation
+update. Technical PASS covers catalog/health only. Outbound access and use as a
+CTI source remain unapproved by company policy; target tool argument/response
+schemas, per-call costs and end-to-end ingestion remain NOT VERIFIED. See
+[CTI ingestion design](CTI_THREADLINQS_INGESTION.md#1-граница-подтверждённого).
 
 ## Default Network Policy
 
