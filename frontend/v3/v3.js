@@ -373,7 +373,7 @@ async function renderFieldIntelligence() {
 
   const tabs = document.createElement('div'); tabs.className = 'tabs';
   const isAdmin = me && me.user && me.user.role === 'ADMINISTRATOR';
-  const tabDefs = [['events', 'Event Catalog'], ['fields', 'Field Registry'], ['imports', 'Auto Import'], ['mappings', 'Mapping Inspector'], ['readiness', 'Hunt Readiness']];
+  const tabDefs = [['events', 'Event Catalog'], ['fields', 'Field Registry'], ['imports', 'Auto Import'], ['mappings', 'Mapping Inspector'], ['readiness', 'Hunt Readiness'], ['threat-links', 'Threat Intel Links']];
   if (isAdmin) tabDefs.push(['bindings', 'Domain Bindings']);
   const tabBtns = {};
   tabDefs.forEach(([id, label]) => {
@@ -404,6 +404,29 @@ async function renderFieldIntelligence() {
   const paint = () => {
     const inv = fieldCtl.inv;
     listHost.innerHTML = '';
+    if (fieldCtl.tab === 'threat-links') {
+      ++fieldCtl.selectSeq;
+      inspBody.innerHTML = '';
+      inspBody.appendChild(escEl('div', 'DESIGN ONLY — conceptual crosswalk; no client evidence or coverage verdict.', 'statebox'));
+      listHost.appendChild(escEl('div', 'Threat Intel Links · DESIGN ONLY', 'paneltitle'));
+      listHost.appendChild(escEl('div', 'Threadlinqs live PoC: NOT VERIFIED', 'statebox'));
+      const crosswalk = document.createElement('ol');
+      [
+        ['External CTI (Threadlinqs)', 'Public technique / IOC, detection requirements, provenance and source references. NOT VERIFIED.'],
+        ['Client / Domain scope (Atlas)', 'Requires administrator-confirmed client-to-domain binding; this diagram asserts no binding.'],
+        ['DSM → QID → Event → Fields', 'Record field evidence and distinguish AQL VERIFIED, CANDIDATE and UNKNOWN; raw payload is not a searchable CEP property.'],
+        ['Hunt readiness + gaps', 'Assess Rule Exists → Required Fields Available → Telemetry Available → Rule Tested → Detection Observed independently.'],
+        ['M7-D Hypothesis / Hunt Plan DRAFT', 'AI proposes; an analyst reviews and confirms. No hypothesis is created by this view.']
+      ].forEach(([title, detail]) => {
+        const step = document.createElement('li');
+        step.append(escEl('strong', title), escEl('p', detail, 'text-muted'));
+        crosswalk.appendChild(step);
+      });
+      listHost.appendChild(crosswalk);
+      listHost.appendChild(escEl('div', 'Sigma / KQL / SPL detections in CTI do not confirm coverage. AQL drafts and candidate mappings do not raise coverage; missing events do not prove the absence of a threat.', 'statebox'));
+      listHost.appendChild(escEl('p', 'Private event payloads are never sent to an external CTI source. This DESIGN ONLY view makes no API calls, loads no staged YAML and displays no synthetic metrics.', 'text-muted'));
+      return;
+    }
     if (fieldCtl.loadError) {
       listHost.appendChild(escEl('div', fieldCtl.loadError, 'statebox'));
       return;
