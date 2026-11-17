@@ -1,8 +1,8 @@
-﻿{
-  "url": "http://127.0.0.1:4173/index.html",
+{
+  "url": "http://127.0.0.1:4174/v3/index.html",
   "predicateSource": "JSON.stringify({url:location.href,title:document.title,navigation:['Analyst Home','Research Cases','Detection Coverage','QRadar Inventory'].map(text=>({text,present:Array.from(document.querySelectorAll('a,button')).some(e=>e.textContent.trim()===text)})),panels:['My Research Cases','My Work / Actions','Recent Activity'].map(text=>({text,present:document.body.innerText.includes(text)})),openResearchCasesButton:Array.from(document.querySelectorAll('button')).some(e=>e.textContent.trim()==='Open research cases'),sessionBlocked:document.body.innerText.includes('Session expired or forbidden (401/403). Please sign in.')})",
   "observed": {
-    "url":"http://127.0.0.1:4173/index.html",
+    "url":"http://127.0.0.1:4174/v3/index.html",
     "title":"Sentinel Atlas — Application Shell v3 (V3-F1 + V3-F2 + V3-F3)",
     "navigation":[{"text":"Analyst Home","present":false},{"text":"Research Cases","present":false},{"text":"Detection Coverage","present":false},{"text":"QRadar Inventory","present":false}],
     "panels":[{"text":"My Research Cases","present":false},{"text":"My Work / Actions","present":false},{"text":"Recent Activity","present":false}],
