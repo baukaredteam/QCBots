@@ -1,0 +1,130 @@
+{
+  "conditions": [
+    {
+      "reason": "Sysmon telemetry is not confirmed for any client",
+      "rule_id": "INC_0002100",
+      "status": "CONDITIONAL"
+    },
+    {
+      "reason": "Sysmon telemetry is not confirmed for any client",
+      "rule_id": "INC_0002400",
+      "status": "CONDITIONAL"
+    },
+    {
+      "reason": "Sysmon telemetry is not confirmed for any client",
+      "rule_id": "INC_0018700",
+      "status": "CONDITIONAL"
+    },
+    {
+      "reason": "Sysmon telemetry is not confirmed for any client",
+      "rule_id": "INC_0018900",
+      "status": "CONDITIONAL"
+    },
+    {
+      "reason": "Sysmon telemetry is not confirmed for any client",
+      "rule_id": "INC_0019000",
+      "status": "CONDITIONAL"
+    },
+    {
+      "reason": "Sysmon telemetry is not confirmed for any client",
+      "rule_id": "INC_0019100",
+      "status": "CONDITIONAL"
+    },
+    {
+      "reason": "Sysmon telemetry is not confirmed for any client",
+      "rule_id": "INC_0022500",
+      "status": "CONDITIONAL"
+    }
+  ],
+  "counts": {
+    "fully_configured_rules": {
+      "actual": 14,
+      "declared": 85
+    },
+    "rules_with_sysmon": {
+      "actual": 7,
+      "declared": 42
+    },
+    "rules_without_sysmon": {
+      "actual": 7,
+      "declared": 43
+    },
+    "total_fields": {
+      "actual": 54,
+      "declared": 42
+    },
+    "total_rules": {
+      "actual": 14,
+      "declared": 346
+    },
+    "total_shared_bbs": {
+      "actual": 67,
+      "declared": 85
+    }
+  },
+  "errors": [
+    {
+      "actual": 14,
+      "code": "COUNT_MISMATCH",
+      "counter": "total_rules",
+      "declared": 346,
+      "file": "full_rules85.yaml"
+    },
+    {
+      "actual": 14,
+      "code": "COUNT_MISMATCH",
+      "counter": "fully_configured_rules",
+      "declared": 85,
+      "file": "full_rules85.yaml"
+    },
+    {
+      "actual": 7,
+      "code": "COUNT_MISMATCH",
+      "counter": "rules_with_sysmon",
+      "declared": 42,
+      "file": "full_rules85.yaml"
+    },
+    {
+      "actual": 7,
+      "code": "COUNT_MISMATCH",
+      "counter": "rules_without_sysmon",
+      "declared": 43,
+      "file": "full_rules85.yaml"
+    },
+    {
+      "actual": 67,
+      "code": "COUNT_MISMATCH",
+      "counter": "total_shared_bbs",
+      "declared": 85,
+      "file": "shared_bbs.yaml"
+    },
+    {
+      "actual": 54,
+      "code": "COUNT_MISMATCH",
+      "counter": "total_fields",
+      "declared": 42,
+      "file": "fields.yaml"
+    },
+    {
+      "bb_id": "BB_0002100_common:Whoami_Executed_as_System_Windows",
+      "code": "UNRESOLVED_BB",
+      "owner": "shared_bbs",
+      "reference": "BB_eventype:ProcessCreate"
+    }
+  ],
+  "excluded_inputs": [
+    "field_intelligence_concept_v4.html",
+    "qradar_rules_bb_sysmon.csv"
+  ],
+  "schema_version": 1,
+  "scope": "staged evidence only; no trust promotion or QRadar writes",
+  "sha256": {
+    "custom_fields_qradar.yaml": "8ac9785231e063018fc42d0d63485e70772f02e8dc36c8f4380063fc064aaf0e",
+    "fields.yaml": "4de588cda5bc13a89188e4a1d6226ded97220c7d3c0af5572a757cc9dd403d08",
+    "full_rules85.yaml": "1261bc69c19baf6f6bb69a704a0cabcbd112a4b1929acb37682ae243d77a7bf9",
+    "rules_inventory.yaml": "111db2adfffaae90c562a72f695f9d21d7bdff52acfb9fef23ca2a7086ec3957",
+    "shared_bbs.yaml": "4955df2d63c02ee9e87c9e2ae15df6233270b15a062e50aec75c0f5b3e7fbcb4"
+  },
+  "synthetic_policy": "HTML/concepts are excluded; references in YAML are rejected",
+  "verdict": "REJECT"
+}
