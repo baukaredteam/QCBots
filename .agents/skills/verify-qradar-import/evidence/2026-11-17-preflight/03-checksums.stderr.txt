@@ -1,0 +1,13 @@
+sha256sum.exe : /usr/bin/sha256sum: 'full_rules85.yaml'$'\r': No such file or directory
+строка:1 знак:370
++ ... 026-07-11"; & "C:\Program Files\Git\usr\bin\sha256sum.exe" -c SHA256S ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (/usr/bin/sha256...le or directory:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+/usr/bin/sha256sum: 'shared_bbs.yaml'$'\r': No such file or directory
+/usr/bin/sha256sum: 'fields.yaml'$'\r': No such file or directory
+/usr/bin/sha256sum: 'qradar_rules_bb_sysmon.csv'$'\r': No such file or directory
+/usr/bin/sha256sum: 'field_intelligence_concept_v4.html'$'\r': No such file or directory
+/usr/bin/sha256sum: WARNING: 1 line is improperly formatted
+/usr/bin/sha256sum: WARNING: 5 listed files could not be read

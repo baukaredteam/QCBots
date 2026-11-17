@@ -1,0 +1,7 @@
+bash.exe : sha256sum: WARNING: 1 line is improperly formatted
+строка:1 знак:351
++ ... 6sum -c -"; & $bash -c $cmd > "$E\03c-checksums-bash.stdout.txt" 2> " ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (sha256sum: WARN...perly formatted:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
